@@ -11,8 +11,8 @@ public static class ModuleFactory
                 //return new HealthModule(healthConfig);
 
             case ModuleEntry.ModuleType.PlayerMovement:
-                //var moveConfig = entry.config as PlayerMovementConfig;
-                //return new PlayerMovementModule(moveConfig);
+                var moveConfig = entry.config as MovementModuleConfig;
+                return new MovementModule(moveConfig);
 
             case ModuleEntry.ModuleType.Combat:
                 //return new CombatModule(); 
