@@ -3,33 +3,33 @@ using UnityEngine.AI;
 
 public class MovementModule : ModuleBase
 {
-    private AgentController agent;
-    private Camera mainCamera;
-    private MovementModuleConfig config;
+    private AgentController _agent;
+    private Camera _mainCamera;
+    private MovementModuleConfig _config;
 
     public MovementModule(MovementModuleConfig config)
     {
-        this.config = config;
+        _config = config;
     }
 
     public override void Initialize()
     {
         base.Initialize();
-        agent = Controller as AgentController;
-        mainCamera = Camera.main;
+        _agent = Controller as AgentController;
+        _mainCamera = Camera.main;
 
-        if (agent?.NavAgent != null)
+        if (_agent?.NavAgent != null)
         {
-            ApplyNavAgentSettings(agent.NavAgent);
+            ApplyNavAgentSettings(_agent.NavAgent);
         }
     }
 
     private void ApplyNavAgentSettings(NavMeshAgent navAgent)
     {
-        navAgent.speed = config.movementSpeed;
-        navAgent.acceleration = config.acceleration;
-        navAgent.angularSpeed = config.angularSpeed;
-        navAgent.stoppingDistance = config.stoppingDistance;
+        navAgent.speed = _config.movementSpeed;
+        navAgent.acceleration = _config.acceleration;
+        navAgent.angularSpeed = _config.angularSpeed;
+        navAgent.stoppingDistance = _config.stoppingDistance;
     }
 
     public override bool Tick()
@@ -38,7 +38,7 @@ public class MovementModule : ModuleBase
 
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 MoveTo(hit.point);
@@ -50,9 +50,9 @@ public class MovementModule : ModuleBase
 
     private void MoveTo(Vector3 destination)
     {
-        if (agent.NavAgent != null)
+        if (_agent.NavAgent != null)
         {
-            agent.NavAgent.SetDestination(destination);
+            _agent.NavAgent.SetDestination(destination);
         }
     }
 }
