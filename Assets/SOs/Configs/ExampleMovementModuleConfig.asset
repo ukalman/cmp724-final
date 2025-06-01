@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b83c7a1847041bba7caf27e2a5f33bc, type: 3}
   m_Name: ExampleMovementModuleConfig
   m_EditorClassIdentifier: 
-  movementSpeed: 10
-  acceleration: 8
-  angularSpeed: 120
+  movementSpeed: 4
+  acceleration: 999
+  angularSpeed: 720
   stoppingDistance: 0.1
