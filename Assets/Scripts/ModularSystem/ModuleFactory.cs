@@ -7,8 +7,8 @@ public static class ModuleFactory
         switch (entry.type)
         {
             case ModuleEntry.ModuleType.Health:
-                //var healthConfig = entry.config as HealthModuleConfig;
-                //return new HealthModule(healthConfig);
+                var healthConfig = entry.config as HealthModuleConfig;
+                return new HealthModule(healthConfig);
 
             case ModuleEntry.ModuleType.PlayerMovement:
                 var moveConfig = entry.config as MovementModuleConfig;

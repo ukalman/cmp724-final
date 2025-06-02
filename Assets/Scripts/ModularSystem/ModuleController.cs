@@ -81,4 +81,13 @@ public class ModuleController : MonoBehaviour
             module.Activate();
         }
     }
+    
+    public void DisableModules()
+    {
+        foreach (var module in _modules.Values)
+        {
+            module.Disable();
+        }
+    }
+
 }

@@ -33,5 +33,17 @@ public class AgentController : ModuleController
     protected virtual void Start()
     {
         ActivateModules();
+        
+        var health = GetModule<HealthModule>();
+        if (health != null)
+        {
+            health.OnDied += OnAgentDied;
+        }
+    }
+    
+    private void OnAgentDied()
+    {
+        DisableModules();
+        // İstersen burada animasyon, efekt, ragdoll vs. tetikleyebilirsin
     }
 }
