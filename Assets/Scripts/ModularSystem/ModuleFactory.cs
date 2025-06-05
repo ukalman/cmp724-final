@@ -15,7 +15,8 @@ public static class ModuleFactory
                 return new MovementModule(moveConfig);
 
             case ModuleEntry.ModuleType.Combat:
-                //return new CombatModule(); 
+                var combatConfig = entry.config as CombatModuleConfig;
+                return new CombatModule(combatConfig); 
 
             default:
                 Debug.LogError($"Unsupported module type: {entry.type}");

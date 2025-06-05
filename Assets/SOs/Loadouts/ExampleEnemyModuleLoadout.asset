@@ -10,12 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3be528a11e9840ed9268149c50e9edd2, type: 3}
-  m_Name: ExampleAgentModuleLoadout
+  m_Name: ExampleEnemyModuleLoadout
   m_EditorClassIdentifier: 
   modules:
-  - type: 1
-    config: {fileID: 11400000, guid: 87b0b600d88a7ef4c838b6f35ffc1472, type: 2}
-    priority: 0
   - type: 0
     config: {fileID: 11400000, guid: 461caad78cc015c4dbaca9efe7720d46, type: 2}
     priority: 0
