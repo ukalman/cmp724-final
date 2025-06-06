@@ -63,7 +63,7 @@ public class CombatManager : MonoBehaviour
         foreach (var cm in combatants)
         {
             var health = cm.Controller.GetModule<HealthModule>();
-            int initiative = Random.Range(1, 100); // sonra Agility + Perception eklersin
+            float initiative = cm.CalculateInitiative();
 
             _turnQueue.Add(new TurnQueueEntry(cm, health, initiative));
         }
@@ -114,7 +114,7 @@ public class CombatManager : MonoBehaviour
             /* yield return new WaitUntil(() =>
                 attacker.GetQueuedActions().Count > 0 || attacker.CurrentAP <= 0f);
             */
-            yield return new WaitUntil(() => isPlayerTurn == false);
+            yield return new WaitUntil(() => isPlayerTurn == false); /* TODO bu player end turn butonuna basana kadar bekleyecek */
             Debug.Log($"Player'in action count'i: {attacker.GetQueuedActions().Count}");
         }
         else
@@ -130,8 +130,13 @@ public class CombatManager : MonoBehaviour
             
             int attackerSkill = 85;
             int targetAC = 5;
+            
+            var stats = attacker.Controller.GetModule<StatsModule>();
+            float perception = stats?.Perception ?? 0.0f;
+            float strength = stats?.Strength ?? 0.0f;
+            float luck = stats?.Luck ?? 0.0f;
 
-            float hitChance = CombatMath.CalculateHitChance(attackerSkill, targetAC, action.accuracyModifier);
+            float hitChance = CombatMath.CalculateHitChance(attackerSkill, targetAC, action.accuracyModifier, perception);
             bool didHit = Random.Range(0.0f, 100.0f) < hitChance;
             
             var defenderHealth = defender.Controller.GetModule<HealthModule>();
@@ -139,24 +144,26 @@ public class CombatManager : MonoBehaviour
             Debug.Log($"{attacker.Controller.name} uses {action.name} on {defender.Controller.name}: " +
                       (didHit ? "HIT!" : "MISS") + $" ({hitChance:0.0}%)");
 
-        if (didHit)
-        {
-            int rawDamage = action.RollRawDamage();
-            int finalDamage = CombatMath.CalculateFinalDamage(rawDamage, 1.0f, 0, 0.0f);
-            defenderHealth.TakeDamage(finalDamage);
-            Debug.Log($"→ {defender.Controller.name} took {finalDamage} damage.");
-        }
+            if (didHit)
+            {
+                int rawDamage = action.RollRawDamage();
+                bool isCrit = CombatMath.CheckCriticalHit(action.criticalChance, luck);
+                
+                if (isCrit)
+                {
+                    rawDamage = Mathf.RoundToInt(rawDamage * 1.5f);
+                    Debug.Log("CRITICAL HIT!");
+                }
+                /* TODO melee attack ise strength kullanılacak */
+                int finalDamage = CombatMath.CalculateFinalDamage(rawDamage, 1.0f, 0, 0.0f, strength);
+                defenderHealth.TakeDamage(finalDamage);
+                Debug.Log($"→ {defender.Controller.name} took {finalDamage} damage.");
+            }
 
-        yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.25f);
         }
         
         Debug.Log($"{attacker.Controller.transform.name} queued actionlarini kullandi." );
-        
-        /*
-        var actions = attacker.GetAvailableActions();
-        if (actions == null || actions.Count == 0) yield break;
-        */
-        
         yield return new WaitForSeconds(0.25f);
     }
 

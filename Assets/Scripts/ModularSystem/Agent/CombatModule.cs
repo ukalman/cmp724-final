@@ -6,6 +6,8 @@ public class CombatModule : ModuleBase
     private CombatModuleConfig _config;
     private AgentController _agent;
 
+    private StatsModule _stats;
+
     private float _currentAP;
     [SerializeField] private float _maxAP ;
 
@@ -34,7 +36,9 @@ public class CombatModule : ModuleBase
     {
         base.Initialize();
         _agent = Controller as AgentController;
+        _stats = _agent.GetModule<StatsModule>();
         _cooldownRemaining = 0.0f;
+        _maxAP = CalculateMaxAP();
         _currentAP = _maxAP;
     }
 
@@ -50,6 +54,20 @@ public class CombatModule : ModuleBase
         return true;
     }
 
+    private float CalculateMaxAP()
+    {
+        if (_stats == null) return _config.maxAP;
+
+        // Örnek: Base + (Agility / 2)
+        return _config.maxAP + (_stats.Agility * 0.5f);
+    }
+    
+    public float CalculateInitiative()
+    {
+        // Örnek: Base roll + Agility etkisi
+        return Random.Range(1, 100) + (_stats?.Agility ?? 0) * 2.0f;
+    }
+    
     public void QueueAction(CombatAction action)
     {
         if (_currentAP >= action.apCost)

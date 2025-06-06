@@ -2,9 +2,9 @@ public class TurnQueueEntry
 {
     public CombatModule combatModule;
     public HealthModule healthModule;
-    public int initiative;
+    public float initiative;
 
-    public TurnQueueEntry(CombatModule combat, HealthModule health, int initiative)
+    public TurnQueueEntry(CombatModule combat, HealthModule health, float initiative)
     {
         this.combatModule = combat;
         this.healthModule = health;

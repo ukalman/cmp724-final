@@ -75,6 +75,12 @@ public class HealthModule : ModuleBase
         Debug.Log("I fucking died!");
     }
 
+    public void IncreaseMaxHealth(int points)
+    {
+        _maxHealth += (points * 5.0f);
+        _currentHealth = _maxHealth;
+    }
+
     public float GetHealth() => _currentHealth;
     public float GetMaxHealth() => _maxHealth;
     public bool IsDead() => _isDead;
