@@ -11,8 +11,12 @@ public enum ConsumableEffectType
 public class ConsumableEffect
 {
     public ConsumableEffectType effectType;
+    [Tooltip("Only used if effectType is BuffStat")]
     public StatType statType;
+    
+    [Tooltip("Only used if effectType is BuffSkill")]
     public SkillType skillType;
+    
     public float amount;
     public float duration; // 0 ise anlık etkidir
 }

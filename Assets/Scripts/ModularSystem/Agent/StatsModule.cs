@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public enum StatType
@@ -56,15 +57,69 @@ public class StatsModule : ModuleBase
         }
     }
     
-    private void HandleLevelUp(LevelUpData data)
+    public void ApplyTemporaryBoost(StatType stat, float amount, float duration)
     {
-        if (data.levelUpChoice == LevelUpChoiceType.Stat && data.statType.HasValue)
+        switch (stat)
         {
-            IncreaseStat(data.statType.Value, data.amount);
-            Debug.Log($"{Controller.name} increased {data.statType.Value} by {data.amount} → now: {GetStat(data.statType.Value)}");
-            Controller.GetModule<HealthModule>().IncreaseMaxHealth(data.amount);
+            case StatType.Strength:
+                Strength += (int)amount;
+                break;
+            case StatType.Perception:
+                Perception += (int)amount;
+                break;
+            case StatType.Endurance:
+                Endurance += (int)amount;
+                break;
+            case StatType.Charisma:
+                Charisma += (int)amount;
+                break;
+            case StatType.Intelligence:
+                Intelligence += (int)amount;
+                break;
+            case StatType.Agility:
+                Agility += (int)amount;
+                break;
+            case StatType.Luck:
+                Luck += (int)amount;
+                break;
         }
+        
+        Debug.Log($"{Controller.name} gained temporary +{amount} {stat} for {duration} seconds");
+        
+        if (duration > 0)
+            Controller.StartCoroutine(RemoveBoostAfterDelay(stat, (int)amount, duration));
     }
+
+    private IEnumerator RemoveBoostAfterDelay(StatType stat, int amount, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        switch (stat)
+        {
+            case StatType.Strength:
+                Strength -= amount;
+                break;
+            case StatType.Perception:
+                Perception -= amount;
+                break;
+            case StatType.Endurance:
+                Endurance -= amount;
+                break;
+            case StatType.Charisma:
+                Charisma -= amount;
+                break;
+            case StatType.Intelligence:
+                Intelligence -= amount;
+                break;
+            case StatType.Agility:
+                Agility -= amount;
+                break;
+            case StatType.Luck:
+                Luck -= amount;
+                break;
+        }
+        Debug.Log($"{Controller.name}'s temporary {stat} boost expired");
+    }
+
 
     public void IncreaseStat(StatType type, int amount = 1)
     {
@@ -94,4 +149,15 @@ public class StatsModule : ModuleBase
             _ => 0,
         };
     }
+    
+    private void HandleLevelUp(LevelUpData data)
+    {
+        if (data.levelUpChoice == LevelUpChoiceType.Stat && data.statType.HasValue)
+        {
+            IncreaseStat(data.statType.Value, data.amount);
+            Debug.Log($"{Controller.name} increased {data.statType.Value} by {data.amount} → now: {GetStat(data.statType.Value)}");
+            Controller.GetModule<HealthModule>().IncreaseMaxHealth(data.amount);
+        }
+    }
+
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -40,6 +41,26 @@ public class SkillsModule : ModuleBase
         }
     }
 
+    public void ApplyTemporaryBoost(SkillType skill, float amount, float duration)
+    {
+        if (!_skills.ContainsKey(skill))
+            _skills[skill] = 0;
+
+        _skills[skill] += (int)amount;
+        Debug.Log($"{Controller.name} gained temporary +{amount} {skill} skill for {duration} seconds");
+
+        if (duration > 0)
+            Controller.StartCoroutine(RemoveSkillBoostAfterDelay(skill, (int)amount, duration));
+    }
+
+    private IEnumerator RemoveSkillBoostAfterDelay(SkillType skill, int amount, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _skills[skill] -= amount;
+        Debug.Log($"{Controller.name}'s temporary {skill} boost expired");
+    }
+
+    
     private void HandleLevelUp(LevelUpData data)
     {
         if (data.levelUpChoice != LevelUpChoiceType.Skill || !data.skillType.HasValue) return;

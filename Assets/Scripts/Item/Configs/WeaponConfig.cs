@@ -2,10 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Items/Weapon")]
-public class WeaponConfig : ItemConfig, IDurability
+public class WeaponConfig : EquippableItemConfig
 {
-    public List<CombatAction> baseActions;
-    public float maxDurability { get; set; }
+    public CombatAction[] baseActions;
 
     private void OnEnable()
     {

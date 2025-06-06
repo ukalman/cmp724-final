@@ -66,6 +66,13 @@ public class HealthModule : ModuleBase
         _currentHealth = Mathf.Clamp(_currentHealth, 0.0f, _maxHealth);
         OnHealthChanged?.Invoke(_currentHealth, _maxHealth);
     }
+    
+    public void RestoreHealth(float amount)
+    {
+        _currentHealth = Mathf.Min(_currentHealth + amount, _maxHealth);
+        Debug.Log($"{Controller.name} restored {amount} HP. Current HP: {_currentHealth}/{_maxHealth}");
+    }
+
 
     private void Die()
     {
