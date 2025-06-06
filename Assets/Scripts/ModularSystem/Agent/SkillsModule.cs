@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum SkillType
 {
+    None,
     Melee,
     Ranged,
     Sneak,

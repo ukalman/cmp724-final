@@ -18,8 +18,7 @@ public class CombatModule : ModuleBase
 
     private List<CombatAction> _availableActions;
     private Queue<CombatAction> _queuedActions;
-
-    public List<CombatAction> GetAvailableActions() => _availableActions;
+    
     public Queue<CombatAction> GetQueuedActions() => _queuedActions;
     
     public CombatModule(CombatModuleConfig config)
@@ -53,7 +52,7 @@ public class CombatModule : ModuleBase
 
         return true;
     }
-
+    
     private float CalculateMaxAP()
     {
         if (_stats == null) return _config.maxAP;
@@ -100,6 +99,20 @@ public class CombatModule : ModuleBase
         Debug.Log($"AP refillendi, current AP: {_currentAP}");
     }
     
+    public List<CombatAction> GetAvailableActions()
+    {
+        WeaponConfig weapon = GetEquippedWeapon();
+        List<CombatAction> actions = new List<CombatAction>();
+
+        foreach (var action in weapon.baseActions)
+        {
+            if (IsActionUnlocked(action))
+                actions.Add(action);
+        }
+
+        return actions;
+    }
+    
     public void AddAvailableAction(CombatAction action)
     {
         if (!_availableActions.Contains(action))
@@ -112,9 +125,37 @@ public class CombatModule : ModuleBase
             _availableActions.Remove(action);
     }
 
+    private bool IsActionUnlocked(CombatAction action)
+    {
+        // Burada action'a özel şartlara bakarız
+        // Örn: skill seviyesi yeterli mi?
+        var skills = Controller.GetModule<SkillsModule>();
+        var stats = Controller.GetModule<StatsModule>();
+
+        return action.requiredSkill == SkillType.None ||
+               skills.GetSkill(action.requiredSkill) >= action.requiredSkillLevel;
+    }
+    
     public BodyPartData GetSelectedBodyPart()
     {
         return BodyPartLibrary.GetData(BodyPartType.Torso);  /* TODO placeholder simdilik */
     }
+
+    public WeaponConfig GetEquippedWeapon()
+    {
+        Debug.Log("Calling GetEquippedWeapon");
+        /* TODO not implemented yet */
+        return null;
+    }
     
+    private void HandleLevelUp(LevelUpData data)
+    {
+        UpdateUnlockedActions(); // Gerekirse cache yenile
+    }
+
+    private void UpdateUnlockedActions()
+    {
+        Debug.Log("Calling UpdateUnlockedActions");
+        /* TODO not implemented yet */   
+    }
 }

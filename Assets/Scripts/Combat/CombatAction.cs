@@ -18,7 +18,9 @@ public class CombatAction : ScriptableObject
     [Range(0.0f, 100.0f)]
     public float criticalChance = 0.0f;
     
+    public SkillType requiredSkill = SkillType.None;
     public SkillType usedSkill = SkillType.Melee; // default
+    public int requiredSkillLevel = 0;
     
     public bool isBurst;
     public float burstHitPenalty = 10.0f; // her atista -10% isabet
