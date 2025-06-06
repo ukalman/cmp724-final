@@ -111,5 +111,10 @@ public class CombatModule : ModuleBase
         if (_availableActions.Contains(action))
             _availableActions.Remove(action);
     }
+
+    public BodyPartData GetSelectedBodyPart()
+    {
+        return BodyPartLibrary.GetData(BodyPartType.Torso);  /* TODO placeholder simdilik */
+    }
     
 }

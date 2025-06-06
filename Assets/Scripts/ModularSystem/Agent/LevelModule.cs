@@ -7,12 +7,6 @@ public enum LevelUpChoiceType
     Skill
 }
 
-public enum SkillType
-{
-    
-} /* TODO sonradan SkillsModule'e tasinacak */
-
-
 public class LevelUpData /* Event data class */
 {
     public LevelUpChoiceType levelUpChoice;

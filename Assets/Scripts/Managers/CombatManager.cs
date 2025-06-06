@@ -2,8 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
+
+public class DamageInfo
+{
+    public float RawDamage;
+    public BodyPartType TargetPart;
+    public DamageType DamageType;
+    public float DamageMultiplier;
+    public float DamageThreshold;
+    public float DamageResistance;
+}
 
 public class CombatManager : MonoBehaviour
 {
@@ -111,9 +122,6 @@ public class CombatManager : MonoBehaviour
             isPlayerTurn = true;
             Debug.Log("Sıra player'da");
             // Oyuncu sıraya aksiyon koyacak, End Turn UI'ı basıldığında devam edilecek
-            /* yield return new WaitUntil(() =>
-                attacker.GetQueuedActions().Count > 0 || attacker.CurrentAP <= 0f);
-            */
             yield return new WaitUntil(() => isPlayerTurn == false); /* TODO bu player end turn butonuna basana kadar bekleyecek */
             Debug.Log($"Player'in action count'i: {attacker.GetQueuedActions().Count}");
         }
@@ -128,41 +136,71 @@ public class CombatManager : MonoBehaviour
         {
             var action = attacker.GetQueuedActions().Dequeue();
             
-            int attackerSkill = 85;
-            int targetAC = 5;
+            int attackerSkill = attacker.Controller.GetModule<SkillsModule>().GetSkill(action.usedSkill);
+            int targetAC = defender.Controller.GetModule<StatsModule>().GetStat(StatType.Agility); /* todo sonradan degisecek */
             
             var stats = attacker.Controller.GetModule<StatsModule>();
             float perception = stats?.Perception ?? 0.0f;
             float strength = stats?.Strength ?? 0.0f;
             float luck = stats?.Luck ?? 0.0f;
 
-            float hitChance = CombatMath.CalculateHitChance(attackerSkill, targetAC, action.accuracyModifier, perception);
-            bool didHit = Random.Range(0.0f, 100.0f) < hitChance;
-            
-            var defenderHealth = defender.Controller.GetModule<HealthModule>();
+            BodyPartData selectedPart = action.isAimed
+                ? attacker.GetSelectedBodyPart() // oyuncu seçmiş
+                : BodyPartLibrary.GetData(GetRandomBodyPart()); // ağırlıklı rastgele seçim
 
-            Debug.Log($"{attacker.Controller.name} uses {action.name} on {defender.Controller.name}: " +
-                      (didHit ? "HIT!" : "MISS") + $" ({hitChance:0.0}%)");
+            int numShots = action.isBurst ? action.burstCount : 1;
 
-            if (didHit)
+            for (int shot = 0; shot < numShots; shot++)
             {
-                int rawDamage = action.RollRawDamage();
-                bool isCrit = CombatMath.CheckCriticalHit(action.criticalChance, luck);
+              float hitChance = CombatMath.CalculateHitChance(
+                attackerSkill,
+                targetAC,
+                action.accuracyModifier + selectedPart.accuracyPenalty,
+                perception
+                );
                 
-                if (isCrit)
-                {
-                    rawDamage = Mathf.RoundToInt(rawDamage * 1.5f);
-                    Debug.Log("CRITICAL HIT!");
-                }
-                /* TODO melee attack ise strength kullanılacak */
-                int finalDamage = CombatMath.CalculateFinalDamage(rawDamage, 1.0f, 0, 0.0f, strength);
-                defenderHealth.TakeDamage(finalDamage);
-                Debug.Log($"→ {defender.Controller.name} took {finalDamage} damage.");
-            }
+                bool didHit = Random.Range(0.0f, 100.0f) < hitChance;
+                
+                var defenderHealth = defender.Controller.GetModule<HealthModule>();
+                //var defenderInventory = defender.Controller.GetModule<InventoryModule>();
+                
+                Debug.Log($"{attacker.Controller.name} uses {action.name} on {defender.Controller.name}: " +
+                          (didHit ? "HIT!" : "MISS") + $" ({hitChance:0.0}%)");
 
+                if (didHit)
+                {
+                    DamageInfo info = new DamageInfo();
+                    info.RawDamage = action.RollRawDamage();
+                    info.TargetPart = selectedPart.partType;
+                    info.DamageType = action.damageType;
+                    info.DamageMultiplier = selectedPart.damageMultiplier;
+                    
+                    //ArmorData armor = defenderInventory?.GetEquippedArmorOn(info.TargetPart);
+                    //info.DamageThreshold = armor?.damageThreshold ?? 0;
+                    //info.DamageResistance = armor?.damageResistance ?? 0;
+                    
+                    bool isCrit = CombatMath.CheckCriticalHit(action.criticalChance + selectedPart.criticalBonus, luck);
+                    
+                    if (isCrit)
+                    {
+                        info.RawDamage = Mathf.RoundToInt(info.RawDamage * 1.5f);
+                        Debug.Log("CRITICAL HIT!");
+                    }
+                    
+                    float finalDamage = CombatMath.CalculateFinalDamage(
+                        info.RawDamage * info.DamageMultiplier,
+                        1.0f,
+                        info.DamageThreshold,
+                        info.DamageResistance,
+                        strength
+                    );
+                    defenderHealth.TakeDamage(finalDamage);
+                    Debug.Log($"→ {defender.Controller.name} took {finalDamage} damage.");
+                }
+                yield return new WaitForSeconds(0.5f);
+            }
             yield return new WaitForSeconds(0.25f);
         }
-        
         Debug.Log($"{attacker.Controller.transform.name} queued actionlarini kullandi." );
         yield return new WaitForSeconds(0.25f);
     }
@@ -184,6 +222,19 @@ public class CombatManager : MonoBehaviour
             .Select(e => e.combatModule)
             .OrderBy(x => Random.value)
             .FirstOrDefault();
+    }
+    
+    private BodyPartType GetRandomBodyPart()
+    {
+        var weights = new Dictionary<BodyPartType, float>
+        {
+            { BodyPartType.Torso, 40.0f },
+            { BodyPartType.Leg, 20.0f },
+            { BodyPartType.Arm, 20.0f },
+            { BodyPartType.Head, 10.0f }
+        };
+
+        return RandomUtils.GetWeightedRandom(weights);
     }
     
     private bool IsCombatOver() /* TODO degisecek */

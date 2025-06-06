@@ -8,7 +8,6 @@ public class HealthModule : ModuleBase
     private bool _isDead;
 
     private HealthModuleConfig _config;
-
     public delegate void HealthChanged(float newValue, float maxValue);
     public event HealthChanged OnHealthChanged;
 
@@ -72,7 +71,7 @@ public class HealthModule : ModuleBase
     {
         _isDead = true;
         OnDied?.Invoke();
-        Debug.Log("I fucking died!");
+        Debug.Log($"{Controller.transform.name}: I fucking died!");
     }
 
     public void IncreaseMaxHealth(int points)
