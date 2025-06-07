@@ -2,19 +2,19 @@ using UnityEngine;
 
 public static class ModuleFactory
 {
-    public static IModuleBase CreateModule(ModuleEntry entry)
+    public static IModuleBase CreateModule(AgentModuleEntry entry)
     {
         switch (entry.type)
         {
-            case ModuleEntry.ModuleType.Health:
+            case AgentModuleEntry.ModuleType.Health:
                 var healthConfig = entry.config as HealthModuleConfig;
                 return new HealthModule(healthConfig);
 
-            case ModuleEntry.ModuleType.PlayerMovement:
+            case AgentModuleEntry.ModuleType.Movement:
                 var moveConfig = entry.config as MovementModuleConfig;
                 return new MovementModule(moveConfig);
 
-            case ModuleEntry.ModuleType.Combat:
+            case AgentModuleEntry.ModuleType.Combat:
                 var combatConfig = entry.config as CombatModuleConfig;
                 return new CombatModule(combatConfig); 
 

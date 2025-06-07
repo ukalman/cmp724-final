@@ -1,5 +1,5 @@
 [System.Serializable]
-public class ModuleEntry
+public class InteractableModuleEntry
 {
     public ModuleType type;
     public ModuleConfigBase config; 
@@ -7,8 +7,6 @@ public class ModuleEntry
 
     public enum ModuleType
     {
-        Health,
-        PlayerMovement,
-        Combat
+        ChestLootModule
     }
 }
