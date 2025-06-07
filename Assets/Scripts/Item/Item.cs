@@ -1,4 +1,4 @@
-public class Item
+public abstract class Item
 {
     public ItemConfig config;
     public int quantity;
@@ -10,7 +10,7 @@ public class Item
         this.quantity = quantity;
 
         if (config is IDurability)
-            this.durability = 1.0f; // dayanıksız item değilse dolu başlar
+            this.durability = ((IDurability)config).maxDurability; // dayanıksız item değilse dolu başlar
     }
 
     public string GetName() => config.itemName;

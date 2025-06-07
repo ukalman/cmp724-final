@@ -71,10 +71,19 @@ public class CombatModule : ModuleBase
     {
         if (_currentAP >= action.apCost)
         {
-            Debug.Log($"Evet queue'lıyozzz, AP: {_currentAP}");
+            Debug.Log($"Queue'lamaya haziriz!, Combat action: {action.actionName} AP: {_currentAP}");
+            var weapon = GetEquippedWeapon();
+            
+            if (weapon.weaponType == WeaponType.Ranged && weapon.currentAmmo < action.ammoCost)
+            {
+                Debug.Log("Out of ammo, cannot queue action!");
+                return;
+            }
+            
             _queuedActions.Enqueue(action);
             SpendAP(action.apCost);
-            Debug.Log($"Quelandı, current ap: {_currentAP}");
+            weapon.ConsumeAmmo(action.ammoCost);
+            Debug.Log($"Queuelandı, Combat action: {action.actionName} AP: {_currentAP}");
         }
     }
     
@@ -101,7 +110,7 @@ public class CombatModule : ModuleBase
     
     public List<CombatAction> GetAvailableActions()
     {
-        WeaponConfig weapon = GetEquippedWeapon();
+        Weapon weapon = GetEquippedWeapon();
         List<CombatAction> actions = new List<CombatAction>();
 
         foreach (var action in weapon.baseActions)
@@ -141,11 +150,9 @@ public class CombatModule : ModuleBase
         return BodyPartLibrary.GetData(BodyPartType.Torso);  /* TODO placeholder simdilik */
     }
 
-    public WeaponConfig GetEquippedWeapon()
+    public Weapon GetEquippedWeapon()
     {
-        Debug.Log("Calling GetEquippedWeapon");
-        /* TODO not implemented yet */
-        return null;
+        return Controller.GetModule<InventoryModule>().GetEquippedWeapon(EquipSlot.MainHand);
     }
     
     private void HandleLevelUp(LevelUpData data)

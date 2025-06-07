@@ -162,7 +162,7 @@ public class CombatManager : MonoBehaviour
                 bool didHit = Random.Range(0.0f, 100.0f) < hitChance;
                 
                 var defenderHealth = defender.Controller.GetModule<HealthModule>();
-                //var defenderInventory = defender.Controller.GetModule<InventoryModule>();
+                var defenderInventory = defender.Controller.GetModule<InventoryModule>();
                 
                 Debug.Log($"{attacker.Controller.name} uses {action.name} on {defender.Controller.name}: " +
                           (didHit ? "HIT!" : "MISS") + $" ({hitChance:0.0}%)");
@@ -175,9 +175,9 @@ public class CombatManager : MonoBehaviour
                     info.DamageType = action.damageType;
                     info.DamageMultiplier = selectedPart.damageMultiplier;
                     
-                    //ArmorData armor = defenderInventory?.GetEquippedArmorOn(info.TargetPart);
-                    //info.DamageThreshold = armor?.damageThreshold ?? 0;
-                    //info.DamageResistance = armor?.damageResistance ?? 0;
+                    Armor armor = defenderInventory?.GetEquippedArmorOn(info.TargetPart);
+                    info.DamageThreshold = armor?.DamageThreshold ?? 0;
+                    info.DamageResistance = armor?.GetResistance(action.damageType) ?? 0;
                     
                     bool isCrit = CombatMath.CheckCriticalHit(action.criticalChance + selectedPart.criticalBonus, luck);
                     

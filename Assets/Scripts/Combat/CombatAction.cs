@@ -7,7 +7,8 @@ public class CombatAction : ScriptableObject
 {
     public string actionName = "Unnamed Action";
     public float apCost = 3.0f;
-
+    public int ammoCost = 0;
+    
     public DamageType damageType = DamageType.Normal;
     public int minDamage = 5;
     public int maxDamage = 10;

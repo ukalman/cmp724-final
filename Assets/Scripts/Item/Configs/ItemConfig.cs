@@ -13,6 +13,7 @@ public abstract class ItemConfig : ScriptableObject
 {
     [Header("Basic Info")]
     public string itemName;
+    public int itemId;
     [TextArea]
     public string description;
     public Sprite icon;

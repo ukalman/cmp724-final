@@ -10,11 +10,19 @@ public enum EquipSlot
     Accessory
 }
 
-public abstract class EquippableItemConfig : ItemConfig
+public abstract class EquippableConfig : ItemConfig, IDurability
 {
     public EquipSlot slot;
     public int requiredLevel = 1;
-    public float durabilityMax = 100.0f;
+    
+    [SerializeField]
+    private float _maxDurability = 100.0f;
+
+    public float maxDurability
+    {
+        get => _maxDurability;
+        set => _maxDurability = Mathf.Max(0.0f, value);
+    }
 
     private void OnEnable()
     {
@@ -24,4 +32,6 @@ public abstract class EquippableItemConfig : ItemConfig
             itemType = ItemType.Misc; // Developer fallback
         }
     }
+
+   
 }

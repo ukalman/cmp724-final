@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class InventoryModule : ModuleBase
 {
@@ -54,7 +55,7 @@ public class InventoryModule : ModuleBase
 
     public bool TryEquipItem(Item item)
     {
-        if (item.config is not EquippableItemConfig equipConfig) return false;
+        if (item.config is not EquippableConfig equipConfig) return false;
 
         if (!_items.Contains(item)) return false;
 
@@ -71,7 +72,7 @@ public class InventoryModule : ModuleBase
 
     public void UnequipItem(Item item)
     {
-        if (item.config is not EquippableItemConfig equipConfig) return;
+        if (item.config is not EquippableConfig equipConfig) return;
 
         EquipSlot slot = equipConfig.slot;
         if (_equippedItems.ContainsKey(slot))
@@ -115,6 +116,32 @@ public class InventoryModule : ModuleBase
                     break;
             }
         }
+    }
+    
+    public Armor GetEquippedArmorOn(BodyPartType part)
+    {
+        foreach (var equipped in _equippedItems.Values)
+        {
+            if (equipped is Armor armor &&
+                armor.CoveredParts != null &&
+                armor.CoveredParts.Contains(part))
+            {
+                return armor;
+            }
+        }
+        return null;
+    }
+    
+    public Weapon GetEquippedWeapon(EquipSlot slot)
+    {
+        foreach (var equipped in _equippedItems)
+        {
+            if (equipped.Key == slot && equipped.Value is Weapon weapon)
+            {
+                return weapon;
+            }
+        }
+        return null;
     }
 }
 
