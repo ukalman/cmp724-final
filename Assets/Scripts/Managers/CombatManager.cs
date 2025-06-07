@@ -135,6 +135,12 @@ public class CombatManager : MonoBehaviour
         while (attacker.GetQueuedActions().Count > 0)
         {
             var action = attacker.GetQueuedActions().Dequeue();
+            if (action.isReload)
+            {
+                attacker.ReloadWeapon();
+                yield return new WaitForSeconds(0.5f);
+                continue;
+            }
             
             int attackerSkill = attacker.Controller.GetModule<SkillsModule>().GetSkill(action.usedSkill);
             int targetAC = defender.Controller.GetModule<StatsModule>().GetStat(StatType.Agility); /* todo sonradan degisecek */
@@ -149,13 +155,13 @@ public class CombatManager : MonoBehaviour
                 : BodyPartLibrary.GetData(GetRandomBodyPart()); // ağırlıklı rastgele seçim
 
             int numShots = action.isBurst ? action.burstCount : 1;
-
+            
             for (int shot = 0; shot < numShots; shot++)
             {
               float hitChance = CombatMath.CalculateHitChance(
                 attackerSkill,
                 targetAC,
-                action.accuracyModifier + selectedPart.accuracyPenalty,
+                action.accuracyModifier + selectedPart.accuracyPenalty + action.burstHitPenalty,
                 perception
                 );
                 

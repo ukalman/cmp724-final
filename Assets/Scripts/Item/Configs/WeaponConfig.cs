@@ -15,6 +15,7 @@ public class WeaponConfig : EquippableConfig
     public CombatAction[] baseActions;
 
     [Header("Ammo (for Ranged only)")]
+    public AmmoType ammoType = AmmoType.None;
     public int maxAmmo;
     public int defaultLoadedAmmo; // silah alınırken dolu gelirse
 

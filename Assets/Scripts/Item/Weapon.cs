@@ -3,13 +3,13 @@ using UnityEngine;
 public class Weapon : Item
 {
     public WeaponType weaponType;
+    public AmmoType ammoType;
     
     public CombatAction[] baseActions;
     
     public int currentAmmo;
     public int maxAmmo;
     public int defaultLoadedAmmo;
-
     
     public Weapon(WeaponConfig config, int quantity = 1) : base(config, quantity)
     {
@@ -18,6 +18,7 @@ public class Weapon : Item
             currentAmmo = Mathf.Clamp(config.defaultLoadedAmmo, 0, config.maxAmmo);
             maxAmmo = config.maxAmmo;
             defaultLoadedAmmo = config.defaultLoadedAmmo;
+            
         }
         else
         {
@@ -27,6 +28,7 @@ public class Weapon : Item
         }
         
         this.weaponType = config.weaponType;
+        this.ammoType = config.ammoType;
         this.baseActions = config.baseActions;
     }
 

@@ -143,6 +143,32 @@ public class InventoryModule : ModuleBase
         }
         return null;
     }
+
+    public int GetAmmoCount(AmmoType type)
+    {
+        int total = 0;
+        foreach (var item in _items)
+        {
+            if (item.config is AmmoConfig ammo && ammo.ammoType == type)
+            {
+                total += item.quantity;
+            }
+        }
+
+        return total;
+    }
+
+    public void UseAmmoToReload(AmmoType type, int ammoCount)
+    {
+        foreach (var item in _items)
+        {
+            if (item is Ammo ammo && ammo.GetAmmoType() == type)
+            {
+                ammo.DecreaseStackSize(ammoCount);
+            }
+        }   
+    }
+
 }
 
 

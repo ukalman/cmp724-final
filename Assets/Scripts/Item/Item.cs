@@ -12,7 +12,7 @@ public abstract class Item
         if (config is IDurability)
             this.durability = ((IDurability)config).maxDurability; // dayanıksız item değilse dolu başlar
     }
-
+    
     public string GetName() => config.itemName;
     public ItemType GetItemType() => config.itemType;
 }

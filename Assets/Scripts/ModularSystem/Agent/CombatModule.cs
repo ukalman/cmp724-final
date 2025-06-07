@@ -154,6 +154,24 @@ public class CombatModule : ModuleBase
     {
         return Controller.GetModule<InventoryModule>().GetEquippedWeapon(EquipSlot.MainHand);
     }
+
+    public void ReloadWeapon()
+    {
+        var inventory = Controller.GetModule<InventoryModule>();
+        var weapon = GetEquippedWeapon();
+
+        if (weapon == null || weapon.currentAmmo >= weapon.maxAmmo) return;
+
+        int neededAmmo = weapon.maxAmmo - weapon.currentAmmo;
+        int available = inventory.GetAmmoCount(weapon.ammoType);
+
+        int toReload = Mathf.Min(neededAmmo, available);
+        inventory.UseAmmoToReload(weapon.ammoType, toReload);
+
+        weapon.currentAmmo += toReload;
+
+        Debug.Log($"{Controller.name} reloaded {toReload} ammo into {weapon.GetName()}");
+    }
     
     private void HandleLevelUp(LevelUpData data)
     {

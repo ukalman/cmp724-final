@@ -1,11 +1,13 @@
 using UnityEngine;
 
-public enum DamageType { Normal, Fire, Explosive, Energy }
+public enum DamageType { None, Normal, Fire, Explosive, Energy }
 
 [CreateAssetMenu(fileName = "NewCombatAction", menuName = "Combat/Combat Action")]
 public class CombatAction : ScriptableObject
 {
     public string actionName = "Unnamed Action";
+    public bool isReload = false;
+    
     public float apCost = 3.0f;
     public int ammoCost = 0;
     
