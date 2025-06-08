@@ -4,22 +4,43 @@ using System.Linq;
 
 public class InventoryModule : ModuleBase
 {
+    private InventoryModuleConfig _config;
+    
     private StatsModule _stats;
     private float _currentWeight;
 
-    private List<Item> _items = new();
-    private Dictionary<EquipSlot, Item> _equippedItems = new();
+    private List<Item> _items;
+    private Dictionary<EquipSlot, Item> _equippedItems;
 
     public event Action<Item> OnItemAdded;
     public event Action<Item> OnItemRemoved;
     public event Action<Item> OnItemEquipped;
     public event Action<Item> OnItemUnequipped;
 
+    public InventoryModule(InventoryModuleConfig config)
+    {
+        _config = config;
+        _items = new List<Item>();
+        _equippedItems = new Dictionary<EquipSlot, Item>();
+    }
+    
     public override void Initialize()
     {
         base.Initialize();
         _stats = Controller.GetModule<StatsModule>();
-        _currentWeight = 0.0f;
+
+        foreach (var itemId in _config._items)
+        {
+            var item = ItemDatabaseManager.Instance.GetItem(itemId);
+            _items.Add(item);
+            _currentWeight += item.config.weight;
+        }
+
+        for (int i = 0; i < _config._equippedItems.Count; i++)
+        {
+            if (_config._equippedItems[i] == -1) continue;
+            _equippedItems.Add((EquipSlot)i,ItemDatabaseManager.Instance.GetItem(_config._equippedItems[i]));
+        }
     }
 
     public float GetMaxCarryWeight()
@@ -123,8 +144,8 @@ public class InventoryModule : ModuleBase
         foreach (var equipped in _equippedItems.Values)
         {
             if (equipped is Armor armor &&
-                armor.CoveredParts != null &&
-                armor.CoveredParts.Contains(part))
+                armor.coveredParts != null &&
+                armor.coveredParts.Contains(part))
             {
                 return armor;
             }
@@ -168,7 +189,6 @@ public class InventoryModule : ModuleBase
             }
         }   
     }
-
 }
 
 

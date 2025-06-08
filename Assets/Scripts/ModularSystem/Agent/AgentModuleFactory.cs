@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public static class ModuleFactory
+public static class AgentModuleFactory
 {
     public static IModuleBase CreateModule(AgentModuleEntry entry)
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MovementModuleConfig", menuName = "Modules/Configs/Movement")]
+[CreateAssetMenu(fileName = "MovementModuleConfig", menuName = "Modules/Agent/Configs/Movement")]
 public class MovementModuleConfig : ModuleConfigBase
 {
     [Header("Movement Settings")]

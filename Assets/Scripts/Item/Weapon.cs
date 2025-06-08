@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Weapon : Item
 {
+    public new WeaponConfig config  => base.config as WeaponConfig;
+    
     public WeaponType weaponType;
     public AmmoType ammoType;
     
@@ -32,7 +34,7 @@ public class Weapon : Item
         this.baseActions = config.baseActions;
     }
 
-    public WeaponConfig GetWeaponConfig() => (WeaponConfig)config;
+    public WeaponConfig GetWeaponConfig() => config;
 
     public bool CanFire() => GetWeaponConfig().weaponType == WeaponType.Ranged && currentAmmo > 0;
 

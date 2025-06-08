@@ -5,17 +5,30 @@ public class Armor : Item
 {
     public new ArmorConfig config => base.config as ArmorConfig;
 
-    public Armor(ArmorConfig config, int quantity = 1) : base(config, quantity) { }
+    public float damageThreshold;
+    public Dictionary<DamageType, float> damageResistances = new Dictionary<DamageType, float>();
+    public BodyPartType[] coveredParts;
 
-    public float DamageThreshold => config.damageThreshold;
-    public Dictionary<DamageType, float> DamageResistances => config.damageResistances;
-    public BodyPartType[] CoveredParts => config.coveredParts;
+    public ArmorType armorType;
+    public float movementPenalty;
+    public float noiseModifier;
+    public EquipSlot slot;
     
-    public ArmorType ArmorType => config.armorType;
-    public float MovementPenalty => config.movementPenalty;
-    public float NoiseModifier => config.noiseModifier;
-    public EquipSlot Slot => config.slot;
+    public Armor(ArmorConfig config, int quantity = 1) : base(config, quantity)
+    {
+        damageThreshold = config.damageThreshold;
+        coveredParts = config.coveredParts;
+        armorType = config.armorType;
+        movementPenalty = config.movementPenalty;
+        noiseModifier = config.noiseModifier;
+        slot = config.slot;
 
+        damageResistances[DamageType.Normal] = config.damageResistances[0];
+        damageResistances[DamageType.Fire] = config.damageResistances[1];
+        damageResistances[DamageType.Explosive] = config.damageResistances[2];
+        damageResistances[DamageType.Energy] = config.damageResistances[3];
+    }
+    
     public void Degrade(float amount)
     {
         durability = Mathf.Max(0.0f, durability - amount);
@@ -23,7 +36,7 @@ public class Armor : Item
     
     public float GetResistance(DamageType type)
     {
-        if (DamageResistances.TryGetValue(type, out float res))
+        if (damageResistances.TryGetValue(type, out float res))
             return res;
         return 0.0f;
     }

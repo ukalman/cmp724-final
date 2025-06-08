@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[CreateAssetMenu(fileName = "SkillsModuleConfig", menuName = "Agent/SkillsModuleConfig")]
+[CreateAssetMenu(fileName = "SkillsModuleConfig", menuName = "Modules/Agent/Configs/Skills")]
 public class SkillsModuleConfig : ScriptableObject
 {
     public List<SkillEntry> startingSkills;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "StatsModuleConfig", menuName = "Modules/Configs/Stats")]
+[CreateAssetMenu(fileName = "StatsModuleConfig", menuName = "Modules/Agent/Configs/Stats")]
 public class StatsModuleConfig : ModuleConfigBase
 {
     [Range(1, 20)] public int strength = 5;

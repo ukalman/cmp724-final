@@ -7,6 +7,6 @@ public class InteractableModuleEntry
 
     public enum ModuleType
     {
-        ChestLootModule
+        LootModule
     }
 }

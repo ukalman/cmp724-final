@@ -182,7 +182,7 @@ public class CombatManager : MonoBehaviour
                     info.DamageMultiplier = selectedPart.damageMultiplier;
                     
                     Armor armor = defenderInventory?.GetEquippedArmorOn(info.TargetPart);
-                    info.DamageThreshold = armor?.DamageThreshold ?? 0;
+                    info.DamageThreshold = armor?.damageThreshold ?? 0;
                     info.DamageResistance = armor?.GetResistance(action.damageType) ?? 0;
                     
                     bool isCrit = CombatMath.CheckCriticalHit(action.criticalChance + selectedPart.criticalBonus, luck);

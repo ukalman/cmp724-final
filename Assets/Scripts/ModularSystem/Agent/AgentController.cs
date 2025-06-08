@@ -24,7 +24,7 @@ public class AgentController : ModuleController
 
         foreach (var entry in _moduleLoadout.modules)
         {
-            var module = ModuleFactory.CreateModule(entry);
+            var module = AgentModuleFactory.CreateModule(entry);
             if (module != null)
                 AddModule(module);
         }

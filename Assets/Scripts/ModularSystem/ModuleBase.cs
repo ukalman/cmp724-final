@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class ModuleBase : IModuleBase
 {
-    public string Name { get; private set; }
+    public string Name { get; protected set; }
     public ModuleState State { get; private set; }
     public bool IsEnabled { get; set; } = true; // Member Initializer
     public ModuleController Controller { get; private set; }

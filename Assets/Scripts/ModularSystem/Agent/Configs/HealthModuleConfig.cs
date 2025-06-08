@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "HealthModuleConfig", menuName = "Modules/Configs/Health")]
+[CreateAssetMenu(fileName = "HealthModuleConfig", menuName = "Modules/Agent/Configs/Health")]
 public class HealthModuleConfig : ModuleConfigBase
 {
     public float maxHealth = 100f;

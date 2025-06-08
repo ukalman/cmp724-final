@@ -13,7 +13,7 @@ public class ArmorConfig : EquippableConfig
 {
     [Header("Defense Stats")]
     public float damageThreshold;
-    public Dictionary<DamageType, float> damageResistances;
+    public float[] damageResistances = new float[4];
 
     [Header("Coverage")]
     public BodyPartType[] coveredParts;
@@ -32,3 +32,5 @@ public class ArmorConfig : EquippableConfig
         itemType = ItemType.Armor;
     }
 }
+
+/* public enum DamageType { None, Normal, Fire, Explosive, Energy } */
