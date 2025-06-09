@@ -31,4 +31,9 @@ public class Ammo : Item
     {
         _stackSize = Mathf.Min(0, _stackSize - amount);
     }
+    
+    public override string GetStatText()
+    {
+        return $"Ammo Type: {_ammoType}\nAmount: {_stackSize}\nWeight: {config.weight:0.0}";
+    }
 }

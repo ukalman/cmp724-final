@@ -15,4 +15,9 @@ public abstract class Item
     
     public string GetName() => config.itemName;
     public ItemType GetItemType() => config.itemType;
+
+    public virtual string GetStatText()
+    {
+        return $"Quantity: {quantity}\nDurability: {durability:0.0}";
+    }
 }

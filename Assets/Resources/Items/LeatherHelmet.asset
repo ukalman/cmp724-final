@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca70c59037fe45b7b06fbb32485e4d54, type: 3}
+  m_Name: LeatherHelmet
+  m_EditorClassIdentifier: 
+  itemName: Leather Helmet
+  itemId: 5
+  description: Leather helmet for noobs.
+  icon: {fileID: 0}
+  itemType: 1
+  weight: 3
+  value: 10
+  slot: 0
+  requiredLevel: 1
+  _maxDurability: 100
+  damageThreshold: 2
+  damageResistances:
+  - 5
+  - 1
+  - 0
+  - 0
+  coveredParts: 00000000
+  armorType: 0
+  movementPenalty: 0
+  noiseModifier: 0

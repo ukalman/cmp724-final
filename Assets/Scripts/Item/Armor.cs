@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Armor : Item
@@ -42,4 +43,12 @@ public class Armor : Item
     }
     
     public bool IsBroken() => durability <= 0.0f;
+    
+    public override string GetStatText()
+    {
+        string resistances = string.Join(", ", damageResistances.Select(kv => $"{kv.Key}: {kv.Value:0.0}"));
+        string parts = string.Join(", ", coveredParts);
+
+        return $"Type: {armorType}\nSlot: {slot}\nDurability: {durability:0.0}\nDamage Threshold: {damageThreshold:0.0}\nResistances: {resistances}\nCovers: {parts}\nMovement Penalty: {movementPenalty:0.0}\nNoise Modifier: {noiseModifier:0.0}\nWeight: {config.weight:0.0}";
+    }
 }

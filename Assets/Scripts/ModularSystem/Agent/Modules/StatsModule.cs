@@ -29,7 +29,7 @@ public class StatsModule : ModuleBase
         _config = config;
     }
 
-    public override void Initialize()
+    public override void Initialize() 
     {
         Strength = _config.strength;
         Perception = _config.perception;

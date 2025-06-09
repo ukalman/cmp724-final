@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class Weapon : Item
@@ -51,5 +52,11 @@ public class Weapon : Item
 
         int max = GetWeaponConfig().maxAmmo;
         currentAmmo = Mathf.Min(currentAmmo + ammoAmount, max);
+    }
+    
+    public override string GetStatText()
+    {
+        string actions = string.Join(", ", baseActions.Select(a => a.name));
+        return $"Type: {weaponType}\nAmmo Type: {ammoType}\nAmmo: {defaultLoadedAmmo}/{maxAmmo}\nDurability: {durability:0.0}\nActions: {actions}\nWeight: {config.weight:0.0}";
     }
 }

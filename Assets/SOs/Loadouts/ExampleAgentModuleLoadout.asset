@@ -14,11 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modules:
   - type: 1
-    config: {fileID: 11400000, guid: 87b0b600d88a7ef4c838b6f35ffc1472, type: 2}
+    config: {fileID: 11400000, guid: 3d488a7787163e04aa6a2b4dd8ad5cba, type: 2}
     priority: 0
   - type: 0
-    config: {fileID: 11400000, guid: 461caad78cc015c4dbaca9efe7720d46, type: 2}
+    config: {fileID: 11400000, guid: ff2e2ad85d4141040bc3d691b79ac117, type: 2}
     priority: 0
   - type: 2
-    config: {fileID: 11400000, guid: 735ae5b40d0c2e54d85b606c669381ef, type: 2}
+    config: {fileID: 11400000, guid: a10b160672616ae40bf1ba35ed66a065, type: 2}
+    priority: 0
+  - type: 3
+    config: {fileID: 11400000, guid: 5a32a7697fa828a4e8b6d2a684239120, type: 2}
+    priority: 0
+  - type: 6
+    config: {fileID: 11400000, guid: 0b782691e7a375a4eab997e9daae2645, type: 2}
     priority: 0

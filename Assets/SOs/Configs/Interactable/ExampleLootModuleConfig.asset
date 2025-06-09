@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cf3b23520f0416bb1122140db32b7ac, type: 3}
   m_Name: ExampleLootModuleConfig
   m_EditorClassIdentifier: 
-  name: Chest Loot Module
+  lootModuleName: Unnamed Loot Module
   maxSlots: 10
-  items: 00000000010000000200000096000000
+  items: 000000000100000002000000

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0409c2a1f355404391884f885b82a2fc, type: 3}
   m_Name: InventoryModuleConfig
   m_EditorClassIdentifier: 
-  _items: 00000000
+  _items: 030000000400000005000000
   _equippedItems: 

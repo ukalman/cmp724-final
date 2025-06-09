@@ -11,7 +11,8 @@ public class InventoryModule : ModuleBase
 
     private List<Item> _items;
     private Dictionary<EquipSlot, Item> _equippedItems;
-
+    
+    public IReadOnlyList<Item> Items => _items;
     public event Action<Item> OnItemAdded;
     public event Action<Item> OnItemRemoved;
     public event Action<Item> OnItemEquipped;
@@ -50,7 +51,6 @@ public class InventoryModule : ModuleBase
     }
 
     public float GetCurrentWeight() => _currentWeight;
-    public IReadOnlyList<Item> GetItems() => _items.AsReadOnly();
     public IReadOnlyDictionary<EquipSlot, Item> GetEquippedItems() => _equippedItems;
 
     public bool TryAddItem(Item item)

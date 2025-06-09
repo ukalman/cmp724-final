@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca70c59037fe45b7b06fbb32485e4d54, type: 3}
+  m_Name: SteelArmor
+  m_EditorClassIdentifier: 
+  itemName: Steel Armor
+  itemId: 4
+  description: A durable steel armor.
+  icon: {fileID: 0}
+  itemType: 1
+  weight: 20
+  value: 50
+  slot: 1
+  requiredLevel: 3
+  _maxDurability: 100
+  damageThreshold: 8
+  damageResistances:
+  - 7
+  - 4
+  - 2
+  - 2
+  coveredParts: 0100000002000000
+  armorType: 1
+  movementPenalty: 5
+  noiseModifier: 3
