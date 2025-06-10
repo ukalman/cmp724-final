@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: CombatModuleConfig
-  m_EditorClassIdentifier: Assembly-CSharp::CombatModuleConfig
-  maxAP: 8
-  availableActions: []
+  m_Script: {fileID: 11500000, guid: 952256c227cc41deb1fa3474ccc13a7f, type: 3}
+  m_Name: SkillsModuleConfig
+  m_EditorClassIdentifier: 
+  startingSkills: []

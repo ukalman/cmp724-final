@@ -58,12 +58,18 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        GameManager.Instance.OnUIPanelTriggered += TriggerPanel;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.OnUIPanelTriggered -= TriggerPanel;
+    }
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            OpenPanel(UIPanelTypes.Loot);
-        }
     }
 
     private void SetupMappings()
@@ -92,15 +98,25 @@ public class UIManager : MonoBehaviour
         return (int)layer;
     }
 
-    public void OpenPanel(UIPanelTypes type)
+    public void TriggerPanel(UIPanelTypes type, bool isOpened)
     {
-        if (_panelLayerMapping.TryGetValue(type, out var layer))
+        if (isOpened)
         {
-            CoreUISignals.OnOpenPanel?.Invoke(type, GetLayerIndex(layer));
+            if (_panelLayerMapping.TryGetValue(type, out var layer))
+            {
+                CoreUISignals.OnOpenPanel?.Invoke(type, GetLayerIndex(layer));
+            }
+            else
+            {
+                Debug.LogError($"No layer mapping defined for panel: {type}");
+            }
         }
         else
         {
-            Debug.LogError($"No layer mapping defined for panel: {type}");
+            if (_panelLayerMapping.TryGetValue(type, out var layer))
+            {
+                CoreUISignals.OnClosePanel?.Invoke(GetLayerIndex(layer));
+            } 
         }
     }
 

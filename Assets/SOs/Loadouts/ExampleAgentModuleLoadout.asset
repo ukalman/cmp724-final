@@ -13,18 +13,24 @@ MonoBehaviour:
   m_Name: ExampleAgentModuleLoadout
   m_EditorClassIdentifier: 
   modules:
-  - type: 1
-    config: {fileID: 11400000, guid: 3d488a7787163e04aa6a2b4dd8ad5cba, type: 2}
+  - type: 4
+    config: {fileID: 11400000, guid: 9b17cce79b2c3484eb23de51377625b4, type: 2}
     priority: 0
-  - type: 0
-    config: {fileID: 11400000, guid: ff2e2ad85d4141040bc3d691b79ac117, type: 2}
+  - type: 6
+    config: {fileID: 11400000, guid: 0b782691e7a375a4eab997e9daae2645, type: 2}
     priority: 0
-  - type: 2
-    config: {fileID: 11400000, guid: a10b160672616ae40bf1ba35ed66a065, type: 2}
+  - type: 5
+    config: {fileID: 11400000, guid: c2100e22903d1cd41ac2dce7a2386fb9, type: 2}
     priority: 0
   - type: 3
     config: {fileID: 11400000, guid: 5a32a7697fa828a4e8b6d2a684239120, type: 2}
     priority: 0
-  - type: 6
-    config: {fileID: 11400000, guid: 0b782691e7a375a4eab997e9daae2645, type: 2}
+  - type: 0
+    config: {fileID: 11400000, guid: ff2e2ad85d4141040bc3d691b79ac117, type: 2}
+    priority: 0
+  - type: 1
+    config: {fileID: 11400000, guid: 3d488a7787163e04aa6a2b4dd8ad5cba, type: 2}
+    priority: 0
+  - type: 2
+    config: {fileID: 11400000, guid: a10b160672616ae40bf1ba35ed66a065, type: 2}
     priority: 0

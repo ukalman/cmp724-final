@@ -30,6 +30,11 @@ public static class AgentModuleFactory
                 var skillsConfig = entry.config as SkillsModuleConfig;
                 return new SkillsModule(skillsConfig); 
             
+            case AgentModuleEntry.ModuleType.Level:
+                var levelConfig = entry.config as LevelModuleConfig;
+                return new LevelModule(levelConfig); 
+
+            
             default:
                 Debug.LogError($"Unsupported module type: {entry.type}");
                 return null;

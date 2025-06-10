@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -72,6 +73,43 @@ public class UIController : MonoBehaviour
         }
 
         GameObject instance = Instantiate(prefab, layers[layerIndex]);
+
+        switch (panelType)
+        {
+            case UIPanelTypes.MainMenu:
+                break;
+            case UIPanelTypes.Settings:
+                break;
+            case UIPanelTypes.CharacterCreation:
+                break;
+            case UIPanelTypes.PipBoy:
+                break;
+            case UIPanelTypes.Loot:
+                instance.GetComponent<LootPanelController>().Initialize(GameManager.Instance.PlayerController, GameManager.Instance.CurrentInteractable);
+                break;
+            case UIPanelTypes.Dialogue:
+                break;
+            case UIPanelTypes.Battle:
+                break;
+            case UIPanelTypes.Pause:
+                break;
+            case UIPanelTypes.Death:
+                break;
+            case UIPanelTypes.Notification:
+                break;
+            case UIPanelTypes.Tooltip:
+                break;
+            case UIPanelTypes.QuestPopup:
+                break;
+            case UIPanelTypes.ConfirmationPopup:
+                break;
+            case UIPanelTypes.LoadingScreen:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(panelType), panelType, null);
+        }
+        
+        
         _activePanels[layerIndex] = instance;
     }
 

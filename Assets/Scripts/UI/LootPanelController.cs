@@ -30,6 +30,7 @@ public class LootPanelController : MonoBehaviour
     private IReadOnlyList<Item> _chestItems;
 
     private InventoryModule _inventoryModule;
+    private InteractableController _interactableController;
     private LootModule _lootModule;
     
     private Item _selectedItem;
@@ -42,8 +43,6 @@ public class LootPanelController : MonoBehaviour
     {
         detailPanel.SetActive(false);
         UpdateCategoryText();
-        
-        Initialize(UIManager.Instance.playerController.GetModule<InventoryModule>(),UIManager.Instance.interactableController.GetModule<LootModule>());
     }
 
     private void OnEnable()
@@ -56,10 +55,11 @@ public class LootPanelController : MonoBehaviour
         UIManager.Instance.onItemElementSelected -= OnItemSelected;
     }
 
-    public void Initialize(InventoryModule inventoryModule, LootModule lootModule)
+    public void Initialize(AgentController agentController, InteractableController interactableController)
     {
-        _inventoryModule = inventoryModule;
-        _lootModule = lootModule;
+        _inventoryModule = agentController.GetModule<InventoryModule>();
+        _interactableController = interactableController;
+        _lootModule = interactableController.GetModule<LootModule>();
         
         _playerItems = _inventoryModule.Items;
         _chestItems = _lootModule.Items;
@@ -231,6 +231,8 @@ public class LootPanelController : MonoBehaviour
     public void OnExit()
     {
         CoreUISignals.OnClosePanel?.Invoke((int)UILayerTypes.Overlay);
+        GameManager.Instance.OnUIPanelTriggered?.Invoke(UIPanelTypes.Loot, false);
+        _interactableController.OnInteractionEnded();
     }
 
     private bool IsItemInCategory(Item item, string category)
