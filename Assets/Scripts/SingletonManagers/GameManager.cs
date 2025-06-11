@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     
     /* Current Interactable Controller */
     public InteractableController CurrentInteractable { get; set; }
+
+    private bool isPipBoyActive;
     
     void Awake()
     {
@@ -24,7 +26,17 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
+        isPipBoyActive = false;
         DontDestroyOnLoad(this);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            isPipBoyActive = !isPipBoyActive;
+            OnUIPanelTriggered?.Invoke(UIPanelTypes.PipBoy,isPipBoyActive);
+        }
     }
 
     public void RegisterPlayer(AgentController agentController)

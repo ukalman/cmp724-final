@@ -19,7 +19,8 @@ public class SkillsModule : ModuleBase
     private Dictionary<SkillType, int> _skills = new();
 
     public int GetSkill(SkillType type) => _skills.TryGetValue(type, out int val) ? val : 0;
-
+    public List<SkillType> unlockedSkillTypes = new();
+    
     public SkillsModule(SkillsModuleConfig config)
     {
         _config = config;
@@ -27,6 +28,7 @@ public class SkillsModule : ModuleBase
         foreach (var entry in _config.startingSkills)
         {
             _skills[entry.skillType] = entry.value;
+            UnlockSkill(entry.skillType);
         }
     }
 
@@ -38,6 +40,14 @@ public class SkillsModule : ModuleBase
         if (levelModule != null)
         {
             levelModule.OnLevelChanged += HandleLevelUp;
+        }
+    }
+
+    private void UnlockSkill(SkillType skillType)
+    {
+        if (!unlockedSkillTypes.Contains(skillType))
+        {
+            unlockedSkillTypes.Add(skillType);
         }
     }
 

@@ -42,7 +42,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] public AgentController playerController; /* todo test için */
     [SerializeField] public InteractableController interactableController; /* todo test için */
 
+    /* Actions - Events */
     public Action<Item, ItemListElement> onItemElementSelected;
+    public Action<SkillType, SkillsListElement> onSkillElementSelected; // skill selection in pip-boy
+    
+    /* Pip-boy */
+    public PipBoyPanels lastSelectedPipBoyPanel;
     
     private void Awake()
     {
@@ -60,6 +65,7 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
+        lastSelectedPipBoyPanel = PipBoyPanels.Stats;
         GameManager.Instance.OnUIPanelTriggered += TriggerPanel;
     }
 

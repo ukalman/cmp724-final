@@ -86,6 +86,7 @@ public class UIController : MonoBehaviour
                 break;
             case UIPanelTypes.Loot:
                 instance.GetComponent<LootPanelController>().Initialize(GameManager.Instance.PlayerController, GameManager.Instance.CurrentInteractable);
+                /* TODO BU INITIALIZE'I DİREKT STARTTA BİLE VEREBİLİRİZ BELKİ? */
                 break;
             case UIPanelTypes.Dialogue:
                 break;

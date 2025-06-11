@@ -6,8 +6,8 @@ using TMPro;
 public class LootPanelController : MonoBehaviour
 {
     [Header("Inventory Panels")]
-    private Transform playerItemListContainer;
-    private Transform chestItemListContainer;
+    private Transform _playerItemListContainer;
+    private Transform _chestItemListContainer;
     [SerializeField] private ItemListElement itemListElementPrefab;
 
     [Header("Category")]
@@ -64,8 +64,8 @@ public class LootPanelController : MonoBehaviour
         _playerItems = _inventoryModule.Items;
         _chestItems = _lootModule.Items;
         
-        playerItemListContainer = GameObject.FindGameObjectWithTag("InventoryContent").transform;
-        chestItemListContainer = GameObject.FindGameObjectWithTag("LootContent").transform;
+        _playerItemListContainer = GameObject.FindGameObjectWithTag("InventoryContent").transform;
+        _chestItemListContainer = GameObject.FindGameObjectWithTag("LootContent").transform;
         
         RefreshLists();
     }
@@ -91,20 +91,20 @@ public class LootPanelController : MonoBehaviour
 
     private void RefreshLists()
     {
-        ClearList(playerItemListContainer);
-        ClearList(chestItemListContainer);
+        ClearList(_playerItemListContainer);
+        ClearList(_chestItemListContainer);
 
         foreach (var item in _playerItems)
         {
             Debug.Log("Creating item for player");
             if (IsItemInCategory(item, _categories[_categoryIndex]))
-                CreateItemButton(item, playerItemListContainer, true);
+                CreateItemButton(item, _playerItemListContainer, true);
         }
 
         foreach (var item in _chestItems)
         {
             Debug.Log("Creating item for chest");
-            CreateItemButton(item, chestItemListContainer, false);
+            CreateItemButton(item, _chestItemListContainer, false);
         }
 
         UpdateWeightInfo();
@@ -112,12 +112,12 @@ public class LootPanelController : MonoBehaviour
 
     private void RefreshItemListElementSelections()
     {
-        foreach (Transform child in playerItemListContainer)
+        foreach (Transform child in _playerItemListContainer)
         {
             child.GetComponent<ItemListElement>().SetSelected(false);
         }
         
-        foreach (Transform child in chestItemListContainer)
+        foreach (Transform child in _chestItemListContainer)
         {
             child.GetComponent<ItemListElement>().SetSelected(false);
         }
@@ -125,8 +125,6 @@ public class LootPanelController : MonoBehaviour
 
     private void ClearList(Transform container)
     {
-        Debug.Log("is player container null: " + (playerItemListContainer == null));
-        Debug.Log("is loot container null: " + (chestItemListContainer == null));
         foreach (Transform child in container)
             Destroy(child.gameObject);
     }
