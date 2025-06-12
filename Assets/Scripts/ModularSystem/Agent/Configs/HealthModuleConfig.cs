@@ -3,6 +3,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "HealthModuleConfig", menuName = "Modules/Agent/Configs/Health")]
 public class HealthModuleConfig : ModuleConfigBase
 {
-    public float maxHealth = 100f;
-    public float regenRate = 0f; // opsiyonel: zamanla iyileşme
+    public float maxHealth;
+    public float regenRate; // opsiyonel: zamanla iyileşme
 }

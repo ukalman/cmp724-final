@@ -8,6 +8,7 @@ TagManager:
   - InventoryContent
   - LootContent
   - SkillsContent
+  - PipBoyInventory
   layers:
   - Default
   - TransparentFX

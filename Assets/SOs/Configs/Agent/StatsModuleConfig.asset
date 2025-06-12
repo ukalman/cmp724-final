@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: af360c469cc94fcab1f3b1b2c9ae1f83, type: 3}
   m_Name: StatsModuleConfig
-  m_EditorClassIdentifier: Assembly-CSharp::StatsModuleConfig
-  strength: 5
-  perception: 5
-  endurance: 5
-  charisma: 5
-  intelligence: 5
-  agility: 5
-  luck: 5
+  m_EditorClassIdentifier: 
+  strength: 1
+  perception: 1
+  endurance: 1
+  charisma: 1
+  intelligence: 1
+  agility: 1
+  luck: 1

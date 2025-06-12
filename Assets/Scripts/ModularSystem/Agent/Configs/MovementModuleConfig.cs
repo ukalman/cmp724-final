@@ -4,8 +4,8 @@ using UnityEngine;
 public class MovementModuleConfig : ModuleConfigBase
 {
     [Header("Movement Settings")]
-    public float movementSpeed = 3.5f;
-    public float acceleration = 8f;
-    public float angularSpeed = 120f;
-    public float stoppingDistance = 0.1f;
+    public float movementSpeed;
+    public float acceleration;
+    public float angularSpeed;
+    public float stoppingDistance;
 }
