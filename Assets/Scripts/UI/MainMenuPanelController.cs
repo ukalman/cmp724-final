@@ -8,10 +8,11 @@ public class MainMenuController : MonoBehaviour
     public CanvasGroup parentGroup;
     public CanvasGroup mainMenuGroup;
     public CanvasGroup settingsGroup;
+    public CanvasGroup logoGroup;
 
     [Header("Fade Settings")]
     public float parentFadeInDuration = 1.0f;
-    public float delayAfterParentFade = 0.5f;
+    public float delayAfterParentFade = 1.0f;
     public float panelFadeDuration = 0.5f;
 
     private void Start()
@@ -21,6 +22,10 @@ public class MainMenuController : MonoBehaviour
         parentGroup.interactable = false;
         parentGroup.blocksRaycasts = false;
 
+        logoGroup.alpha = 0f;
+        logoGroup.interactable = false;
+        logoGroup.blocksRaycasts = false;
+        
         mainMenuGroup.alpha = 0f;
         mainMenuGroup.interactable = false;
         mainMenuGroup.blocksRaycasts = false;
@@ -42,7 +47,7 @@ public class MainMenuController : MonoBehaviour
         yield return new WaitForSeconds(delayAfterParentFade);
 
         // Main Menu açılır
-        yield return StartCoroutine(FadeCanvasGroup(mainMenuGroup, 0f, 1f, panelFadeDuration));
+        yield return StartCoroutine(FadeMultipleCanvasGroups(mainMenuGroup,logoGroup, 0f, 1f, panelFadeDuration));
         mainMenuGroup.interactable = true;
         mainMenuGroup.blocksRaycasts = true;
     }
@@ -89,5 +94,20 @@ public class MainMenuController : MonoBehaviour
             yield return null;
         }
         cg.alpha = to;
+    }
+    
+    private IEnumerator FadeMultipleCanvasGroups(CanvasGroup cg1,CanvasGroup cg2, float from, float to, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            cg1.alpha = Mathf.Lerp(from, to, t);
+            cg2.alpha = Mathf.Lerp(from, to, t);
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        cg1.alpha = to;
+        cg2.alpha = to;
     }
 }
