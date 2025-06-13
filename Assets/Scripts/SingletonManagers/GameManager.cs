@@ -1,10 +1,16 @@
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    
+    
+    public Dictionary<string, int> selectedSpecials = new Dictionary<string, int>();
+    public Dictionary<string, int> selectedSkills = new Dictionary<string, int>();
+    public string playerName = "";
     
     /* Actions - Events */
     public Action<UIPanelTypes,bool> OnUIPanelTriggered;
