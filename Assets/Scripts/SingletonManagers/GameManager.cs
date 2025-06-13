@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
 
     private bool isPipBoyActive;
     
+    /* Global game settings */
+    public float MouseSensitivity = 1.0f;
+    
     void Awake()
     {
         if (Instance != null && Instance != this)

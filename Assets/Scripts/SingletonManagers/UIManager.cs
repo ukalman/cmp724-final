@@ -39,9 +39,6 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private LootPanelController _lootPanel;
 
-    [SerializeField] public AgentController playerController; /* todo test için */
-    [SerializeField] public InteractableController interactableController; /* todo test için */
-
     /* Actions - Events */
     public Action<Item, ItemListElement> onItemElementSelected;
     public Action<SkillType, SkillsListElement> onSkillElementSelected; // skill selection in pip-boy
