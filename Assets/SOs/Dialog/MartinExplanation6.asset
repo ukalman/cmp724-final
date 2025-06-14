@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a3316926f440f44eaf8cf8023c32ccd, type: 3}
+  m_Name: MartinExplanation6
+  m_EditorClassIdentifier: 
+  text: "So... If you can get to the safe and grab those notes, I\u2019d owe you
+    big time. There\u2019s probably some pre-War junk in there too, you can keep
+    whatever else you find."
+  choices:
+  - choiceText: "Fine. I\u2019ll get your notes."
+    nextNode: {fileID: 11400000, guid: 3ec655afd9faff543b614277e0b88a7b, type: 2}
+    criticalChoice: Accept
+  - choiceText: "I don\u2019t risk my neck for homework."
+    nextNode: {fileID: 11400000, guid: 9cceebb3797b42945b1055b974ee3830, type: 2}
+    criticalChoice: Reject

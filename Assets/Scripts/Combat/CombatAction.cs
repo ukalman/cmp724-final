@@ -7,6 +7,8 @@ public class CombatAction : ScriptableObject
 {
     public string actionName = "Unnamed Action";
     public bool isReload = false;
+    public Sprite icon;
+    public AudioClip sfx;
     
     public float apCost = 3.0f;
     public int ammoCost = 0;
@@ -38,6 +40,7 @@ public class CombatAction : ScriptableObject
     
     public override string ToString()
     {
-        return $"{actionName} (AP: {apCost}, DMG: {minDamage}-{maxDamage}, Crit: {criticalChance}%)";
+        if (isReload) return "";
+        return $"{actionName}\n (AP: {apCost}\n DMG: {minDamage}-{maxDamage}\n Crit: {criticalChance}%)";
     }
 }

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a3316926f440f44eaf8cf8023c32ccd, type: 3}
+  m_Name: MartinExplanation1
+  m_EditorClassIdentifier: 
+  text: "Look, I know it\u2019s stupid being here. This place is crawling with ghouls
+    now. But I didn\u2019t have a choice."
+  choices:
+  - choiceText: Why would you come back here? This place is a ghost town.
+    nextNode: {fileID: 11400000, guid: 6ad96e02486a55d4d9aa6ded38dbf24e, type: 2}
+  - choiceText: "You\u2019re lucky you\u2019re still breathing. What\u2019s so important?"
+    nextNode: {fileID: 11400000, guid: 6ad96e02486a55d4d9aa6ded38dbf24e, type: 2}

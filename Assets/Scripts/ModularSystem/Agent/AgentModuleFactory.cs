@@ -12,8 +12,15 @@ public static class AgentModuleFactory
 
             case AgentModuleEntry.ModuleType.Movement:
                 var moveConfig = entry.config as MovementModuleConfig;
-                return new MovementModule(moveConfig);
-
+                if (moveConfig.isEnemy)
+                {
+                    Debug.Log("YES THAT'S EN ENEMY");
+                    return new EnemyMovementModule(moveConfig);
+                }
+                else
+                {
+                    return new MovementModule(moveConfig);  
+                }
             case AgentModuleEntry.ModuleType.Combat:
                 var combatConfig = entry.config as CombatModuleConfig;
                 return new CombatModule(combatConfig); 

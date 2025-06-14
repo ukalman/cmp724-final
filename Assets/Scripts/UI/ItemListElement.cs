@@ -4,7 +4,7 @@ using TMPro;
 
 public class ItemListElement : MonoBehaviour
 {
-    [SerializeField] private TMP_Text nameText;
+     public TMP_Text nameText;
     [SerializeField] private TMP_Text quantityText;
     [SerializeField] private Image backgroundImage;
     
@@ -12,7 +12,7 @@ public class ItemListElement : MonoBehaviour
     private Color _textDefaultColor;
     public bool isPlayerInventory;
     
-    public void Initialize(Item item, bool isPlayerInventory)
+    public void Initialize(Item item, bool isPlayerInventory, bool isEquipped)
     {
         _item = item;
         _textDefaultColor = nameText.color;
@@ -22,7 +22,7 @@ public class ItemListElement : MonoBehaviour
         color.a = 0.0f;
         backgroundImage.color = color;
         
-        nameText.text = item.GetName();
+        nameText.text = !isEquipped ? item.GetName() : item.GetName() + " (Equipped)";
         if (item.config is AmmoConfig config)
         {
             quantityText.text = $"({config.initialStack.ToString()})";
@@ -39,6 +39,11 @@ public class ItemListElement : MonoBehaviour
         UIManager.Instance.onItemElementSelected?.Invoke(_item,this);
     }
 
+    public Item GetItem()
+    {
+        return _item;
+    }
+    
     public void SetSelected(bool selected)
     {
         // örnek: arka plan rengi değişsin

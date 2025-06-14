@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be528a11e9840ed9268149c50e9edd2, type: 3}
+  m_Name: GhoulModuleLoadout
+  m_EditorClassIdentifier: 
+  modules:
+  - type: 0
+    config: {fileID: 11400000, guid: bd2cef8f8889ee640b4a6a8ac130b841, type: 2}
+    priority: 0
+  - type: 1
+    config: {fileID: 11400000, guid: 2f4516695c3a90a4bb8201fa291c62ca, type: 2}
+    priority: 0
+  - type: 2
+    config: {fileID: 11400000, guid: 9847d38d4d44e8d4695b17fcdb89cd4f, type: 2}
+    priority: 0
+  - type: 6
+    config: {fileID: 11400000, guid: a01dcac3082b24e44b5616ba415c5f01, type: 2}
+    priority: 0
+  - type: 5
+    config: {fileID: 11400000, guid: 88798eaf373d2f74c9ebe6ceacf5ad11, type: 2}
+    priority: 0

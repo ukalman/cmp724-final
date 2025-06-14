@@ -10,7 +10,7 @@ public class InventoryModule : ModuleBase
     private float _currentWeight;
 
     private List<Item> _items;
-    private Dictionary<EquipSlot, Item> _equippedItems;
+    public Dictionary<EquipSlot, Item> equippedItems;
     
     public IReadOnlyList<Item> Items => _items;
     public event Action<Item> OnItemAdded;
@@ -18,11 +18,13 @@ public class InventoryModule : ModuleBase
     public event Action<Item> OnItemEquipped;
     public event Action<Item> OnItemUnequipped;
 
+    public int TotalAmmo;
+    
     public InventoryModule(InventoryModuleConfig config)
     {
         _config = config;
         _items = new List<Item>();
-        _equippedItems = new Dictionary<EquipSlot, Item>();
+        equippedItems = new Dictionary<EquipSlot, Item>();
     }
     
     public override void Initialize()
@@ -33,6 +35,16 @@ public class InventoryModule : ModuleBase
         foreach (var itemId in _config._items)
         {
             var item = ItemDatabaseManager.Instance.GetItem(itemId);
+            if (item.GetName() == "10mm Pistol")
+            {
+                TryEquipItem(item);
+            }
+
+            if (item is Ammo ammo)
+            {
+                TotalAmmo += ammo.GetStackSize();
+            }
+            
             _items.Add(item);
             _currentWeight += item.config.weight;
         }
@@ -40,7 +52,7 @@ public class InventoryModule : ModuleBase
         for (int i = 0; i < _config._equippedItems.Count; i++)
         {
             if (_config._equippedItems[i] == -1) continue;
-            _equippedItems.Add((EquipSlot)i,ItemDatabaseManager.Instance.GetItem(_config._equippedItems[i]));
+            equippedItems.Add((EquipSlot)i,ItemDatabaseManager.Instance.GetItem(_config._equippedItems[i]));
         }
     }
 
@@ -51,7 +63,7 @@ public class InventoryModule : ModuleBase
     }
 
     public float GetCurrentWeight() => _currentWeight;
-    public IReadOnlyDictionary<EquipSlot, Item> GetEquippedItems() => _equippedItems;
+    public IReadOnlyDictionary<EquipSlot, Item> GetEquippedItems() => equippedItems;
 
     public bool TryAddItem(Item item)
     {
@@ -81,12 +93,12 @@ public class InventoryModule : ModuleBase
         if (!_items.Contains(item)) return false;
 
         EquipSlot slot = equipConfig.slot;
-        if (_equippedItems.TryGetValue(slot, out var currentlyEquipped))
+        if (equippedItems.TryGetValue(slot, out var currentlyEquipped))
         {
             UnequipItem(currentlyEquipped);
         }
 
-        _equippedItems[slot] = item;
+        equippedItems[slot] = item;
         OnItemEquipped?.Invoke(item);
         return true;
     }
@@ -96,16 +108,16 @@ public class InventoryModule : ModuleBase
         if (item.config is not EquippableConfig equipConfig) return;
 
         EquipSlot slot = equipConfig.slot;
-        if (_equippedItems.ContainsKey(slot))
+        if (equippedItems.ContainsKey(slot))
         {
-            _equippedItems.Remove(slot);
+            equippedItems.Remove(slot);
             OnItemUnequipped?.Invoke(item);
         }
     }
 
     public Item GetEquippedItem(EquipSlot slot)
     {
-        _equippedItems.TryGetValue(slot, out var item);
+        equippedItems.TryGetValue(slot, out var item);
         return item;
     }
 
@@ -141,7 +153,7 @@ public class InventoryModule : ModuleBase
     
     public Armor GetEquippedArmorOn(BodyPartType part)
     {
-        foreach (var equipped in _equippedItems.Values)
+        foreach (var equipped in equippedItems.Values)
         {
             if (equipped is Armor armor &&
                 armor.coveredParts != null &&
@@ -155,7 +167,7 @@ public class InventoryModule : ModuleBase
     
     public Weapon GetEquippedWeapon(EquipSlot slot)
     {
-        foreach (var equipped in _equippedItems)
+        foreach (var equipped in equippedItems)
         {
             if (equipped.Key == slot && equipped.Value is Weapon weapon)
             {

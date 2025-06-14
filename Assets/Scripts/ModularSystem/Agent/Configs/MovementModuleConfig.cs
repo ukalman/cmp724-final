@@ -8,4 +8,5 @@ public class MovementModuleConfig : ModuleConfigBase
     public float acceleration;
     public float angularSpeed;
     public float stoppingDistance;
+    public bool isEnemy;
 }

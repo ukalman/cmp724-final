@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6c683ec9b3d4aadb45763f70b9b5706, type: 3}
+  m_Name: CombatModuleConfig
+  m_EditorClassIdentifier: 
+  maxAP: 12
+  availableActions:
+  - {fileID: 11400000, guid: 034328ce4d8704f418b32274065f4d91, type: 2}
+  - {fileID: 11400000, guid: 38b5f9a1775fb64419c8097c6df1ed0c, type: 2}

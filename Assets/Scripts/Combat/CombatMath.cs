@@ -9,9 +9,9 @@ public static class CombatMath
     
         float baseChance = normalizedSkill - targetAC + accuracyModifier;
         float perceptionBonus = perception * 1.5f;
-        float finalChance = baseChance + perceptionBonus;
+        float finalChance = (baseChance + perceptionBonus) * 2.0f;
 
-        return Mathf.Clamp(finalChance, 1.0f, 95.0f);
+        return Mathf.Clamp(finalChance, 1.0f, 70.0f);
     }
 
 

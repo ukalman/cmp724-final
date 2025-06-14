@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a3316926f440f44eaf8cf8023c32ccd, type: 3}
+  m_Name: MartinExplanation3
+  m_EditorClassIdentifier: 
+  text: We used to live here, before the Raider Overlord took over this whole damn
+    region. I think his old notes might still be in our house, in the safe.
+  choices:
+  - choiceText: Hmm.
+    nextNode: {fileID: 11400000, guid: 22ddc8efef3575c46954a00c5e716262, type: 2}
+  - choiceText: Oh you gotta be fucking shitting me.
+    nextNode: {fileID: 11400000, guid: 22ddc8efef3575c46954a00c5e716262, type: 2}
+  - choiceText: Raider overlord? Whatever.
+    nextNode: {fileID: 11400000, guid: 22ddc8efef3575c46954a00c5e716262, type: 2}

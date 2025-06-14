@@ -11,13 +11,15 @@ public class InteractionZoneTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Player entered");
-        _interactable.OnInteractionZoneEntered(other);
+        if (_interactable.CanInteract())
+        {
+            _interactable.OnInteractionZoneEntered(other);
+        }
+        
     }
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Player exited");
         _interactable.OnInteractionZoneExited(other);
     }
 }

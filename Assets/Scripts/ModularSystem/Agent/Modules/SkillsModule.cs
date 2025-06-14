@@ -27,8 +27,8 @@ public class SkillsModule : ModuleBase
 
         foreach (var entry in _config.startingSkills)
         {
-            _skills[entry.skillType] = entry.value;
-            UnlockSkill(entry.skillType);
+            //_skills[entry.skillType] = entry.value;
+            UnlockSkill(entry.skillType, entry.value);
         }
     }
 
@@ -43,11 +43,12 @@ public class SkillsModule : ModuleBase
         }
     }
 
-    private void UnlockSkill(SkillType skillType)
+    public void UnlockSkill(SkillType skillType, int amount)
     {
         if (!unlockedSkillTypes.Contains(skillType))
         {
             unlockedSkillTypes.Add(skillType);
+            _skills[skillType] = amount;
         }
     }
 

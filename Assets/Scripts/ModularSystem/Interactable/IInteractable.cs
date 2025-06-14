@@ -10,6 +10,6 @@ public enum InteractionTypes
 public interface IInteractable
 {
     void Interact(AgentController interactor);
-    bool CanInteract(AgentController interactor);
+    bool CanInteract();
     string GetPrompt();
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public class DamageInfo
@@ -20,11 +21,11 @@ public class CombatManager : MonoBehaviour
 {
     public static CombatManager Instance { get; private set; }
 
-    [SerializeField] private AgentController _playerAgent;
-    [SerializeField] private AgentController _enemyAgent;
+    [SerializeField] private AgentController playerController;
+    [SerializeField] private AgentController enemyController;
     
-    private CombatModule _playerCombat;
-    private CombatModule _enemyCombat;
+    public CombatModule _playerCombat;
+    public CombatModule _enemyCombat;
 
     private bool _combatOngoing = false;
 
@@ -32,6 +33,11 @@ public class CombatManager : MonoBehaviour
     
     private List<TurnQueueEntry> _turnQueue = new();
 
+    private AudioSource _audioSource;
+    
+    public Camera mainCamera;
+    public Camera dialogueCamera;
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -44,26 +50,55 @@ public class CombatManager : MonoBehaviour
 
     private void Start()
     {
-        _playerCombat = _playerAgent.GetModule<CombatModule>();
-        _enemyCombat = _enemyAgent.GetModule<CombatModule>();
+        StartCoroutine(BeginningCoroutine());
     }
 
+    public IEnumerator BeginningCoroutine()
+    {
+        GameManager.Instance.SwitchToMainCamera();
+        yield return new WaitForSeconds(1.0f);
+        UIManager.Instance.InteractionTextObject = GameObject.FindGameObjectWithTag("InteractionText");
+        UIManager.Instance.InteractionTextObject.SetActive(false);
+        GameManager.Instance.OnUIPanelTriggered?.Invoke(UIPanelTypes.StoryReveal,true);
+        
+    }
+    
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.Escape) && !GameManager.Instance.IsGamePaused)
         {
-            Debug.Log("BASSSSSSSSSSSSSSS");
-            StartCombat(_playerCombat,_enemyCombat);
+            Time.timeScale = 0f;
+            GameManager.Instance.OnUIPanelTriggered?.Invoke(UIPanelTypes.Pause, true);
+            GameManager.Instance.IsGamePaused = true;
         }
     }
 
+    public void RegisterEnemy(CombatModule enemy)
+    {
+        _enemyCombat = enemy;
+        _playerCombat = GameManager.Instance.PlayerController.GetModule<CombatModule>();
+        
+        StartCombat(_playerCombat,_enemyCombat);
+    }
+    
     public void StartCombat(CombatModule player, CombatModule enemy)
     {
+        _audioSource = GetComponent<AudioSource>();
         _playerCombat = player;
         _enemyCombat = enemy;
-       
+        
         _combatOngoing = true;
 
+        playerController = _playerCombat.Controller as AgentController;
+        enemyController = _enemyCombat.Controller as AgentController;
+        
+        playerController.GetComponent<Animator>().SetBool("isMoving",false);
+        enemyController.GetComponent<Animator>().SetBool("isMoving",false);
+        
+        //_enemyCombat.Controller.GetComponent<NavMeshAgent>().enabled = false;
+        //_playerCombat.Controller.GetComponent<NavMeshAgent>().enabled = false;
+        GameManager.Instance.OnUIPanelTriggered?.Invoke(UIPanelTypes.Battle,true);
+        FindObjectOfType<CombatPanelController>().AddLog($"Battle started between {playerController.AgentName} and {enemyController.AgentName}");
         StartCoroutine(CombatLoop());
     }
     
@@ -103,8 +138,15 @@ public class CombatManager : MonoBehaviour
                 yield return new WaitForSeconds(0.5f);
                 
             }
+            FindObjectOfType<CombatPanelController>().AddLog($"Round is over.");
             Debug.Log("TUR BITTI");
-            if (IsCombatOver()) break;
+            if (IsCombatOver())
+            {
+                FindObjectOfType<CombatPanelController>().AddLog($"Battle is over!");
+                _playerCombat.Controller.GetComponent<NavMeshAgent>().enabled = true;
+                GameManager.Instance.OnUIPanelTriggered?.Invoke(UIPanelTypes.Battle,false);
+                break;
+            }
             
             _turnQueue.RemoveAll(entry => entry.healthModule.IsDead());
         }
@@ -117,10 +159,12 @@ public class CombatManager : MonoBehaviour
         attacker.RefillAP();
         attacker.ClearQueuedActions();
         
+        
         if (attacker.Controller.transform.CompareTag("Player"))
         {
             isPlayerTurn = true;
             Debug.Log("Sıra player'da");
+            FindObjectOfType<CombatPanelController>().AddLog($"{playerController.AgentName}'s turn.");
             // Oyuncu sıraya aksiyon koyacak, End Turn UI'ı basıldığında devam edilecek
             yield return new WaitUntil(() => isPlayerTurn == false); /* TODO bu player end turn butonuna basana kadar bekleyecek */
             Debug.Log($"Player'in action count'i: {attacker.GetQueuedActions().Count}");
@@ -128,18 +172,25 @@ public class CombatManager : MonoBehaviour
         else
         {
             Debug.Log("Sıra enemy'de");
+            FindObjectOfType<CombatPanelController>().AddLog($"{enemyController.AgentName}'s turn.");
             GenerateEnemyActions(attacker);
             Debug.Log($"Enemy'in action count'i: {attacker.GetQueuedActions().Count}");
         }
         
         while (attacker.GetQueuedActions().Count > 0)
         {
+            if (IsCombatOver()) break;
             var action = attacker.GetQueuedActions().Dequeue();
             if (action.isReload)
             {
                 attacker.ReloadWeapon();
                 yield return new WaitForSeconds(0.5f);
                 continue;
+            }
+
+            if (action.ammoCost > 0)
+            {
+                attacker.Controller.GetModule<InventoryModule>().TotalAmmo -= action.ammoCost;
             }
             
             int attackerSkill = attacker.Controller.GetModule<SkillsModule>().GetSkill(action.usedSkill);
@@ -151,7 +202,7 @@ public class CombatManager : MonoBehaviour
             float luck = stats?.Luck ?? 0.0f;
 
             BodyPartData selectedPart = action.isAimed
-                ? attacker.GetSelectedBodyPart() // oyuncu seçmiş
+                ? attacker.GetSelectedBodyPart()
                 : BodyPartLibrary.GetData(GetRandomBodyPart()); // ağırlıklı rastgele seçim
 
             int numShots = action.isBurst ? action.burstCount : 1;
@@ -165,13 +216,32 @@ public class CombatManager : MonoBehaviour
                 perception
                 );
                 
-                bool didHit = Random.Range(0.0f, 100.0f) < hitChance;
+                bool didHit = Random.Range(0.0f, 70.0f) < hitChance;
                 
                 var defenderHealth = defender.Controller.GetModule<HealthModule>();
                 var defenderInventory = defender.Controller.GetModule<InventoryModule>();
+
+                var agentController = attacker.Controller as AgentController;
+                
+                if (action.usedSkill == SkillType.Melee)
+                {
+                    agentController.anim.SetTrigger("MeleeAttack");
+                }
+                else if (action.usedSkill == SkillType.Ranged)
+                {
+                    agentController.anim.SetTrigger("RangedAttack");
+                }
+                _audioSource.PlayOneShot(action.sfx);
+                
+                yield return new WaitForSeconds(2.0f);
                 
                 Debug.Log($"{attacker.Controller.name} uses {action.name} on {defender.Controller.name}: " +
                           (didHit ? "HIT!" : "MISS") + $" ({hitChance:0.0}%)");
+
+                var attackerControllerName = (attacker.Controller as AgentController).AgentName;
+                var defenderControllerName = (defender.Controller as AgentController).AgentName;
+                FindObjectOfType<CombatPanelController>().AddLog($"{attackerControllerName} uses {action.name} on {defenderControllerName}: " +
+                                                                 (didHit ? "HIT!" : "MISS") + $" ({hitChance:0.0}%)");
 
                 if (didHit)
                 {
@@ -190,6 +260,7 @@ public class CombatManager : MonoBehaviour
                     if (isCrit)
                     {
                         info.RawDamage = Mathf.RoundToInt(info.RawDamage * 1.5f);
+                        FindObjectOfType<CombatPanelController>().AddLog("CRITICAL HIT!");
                         Debug.Log("CRITICAL HIT!");
                     }
                     
@@ -200,8 +271,15 @@ public class CombatManager : MonoBehaviour
                         info.DamageResistance,
                         strength
                     );
+                    var defenderController = defender.Controller as AgentController;
                     defenderHealth.TakeDamage(finalDamage);
+                    if (!IsCombatOver())
+                    {
+                        defenderController.anim.SetTrigger("TakeDamage");
+                        yield return new WaitForSeconds(1.0f);
+                    }
                     Debug.Log($"→ {defender.Controller.name} took {finalDamage} damage.");
+                    FindObjectOfType<CombatPanelController>().AddLog($"→ {defenderController.AgentName} took {finalDamage} damage.");
                 }
                 yield return new WaitForSeconds(0.5f);
             }
@@ -213,11 +291,19 @@ public class CombatManager : MonoBehaviour
 
     private void GenerateEnemyActions(CombatModule enemy)
     {
+        Debug.Log("GENERATE ENEMY ACTIONS!!");
         var actions = enemy.GetAvailableActions();
+        Debug.Log("enemy available action count: " +actions.Count);
         foreach (var action in actions)
         {
             if (enemy.CurrentAP >= action.apCost)
-                enemy.QueueAction(action);
+            {
+                enemy.QueueAction(action); 
+            }
+            else
+            {
+                Debug.Log("enemy'Nin ap'si yetmiyor :((");
+            }
         }
     }
     

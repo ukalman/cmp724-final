@@ -19,6 +19,8 @@ public class CombatModule : ModuleBase
     private List<CombatAction> _availableActions;
     private Queue<CombatAction> _queuedActions;
     
+    public IEnumerable<CombatAction> QueuedActions => _queuedActions;
+    
     public Queue<CombatAction> GetQueuedActions() => _queuedActions;
     
     public CombatModule(CombatModuleConfig config)
@@ -72,6 +74,7 @@ public class CombatModule : ModuleBase
         if (_currentAP >= action.apCost)
         {
             Debug.Log($"Queue'lamaya haziriz!, Combat action: {action.actionName} AP: {_currentAP}");
+            /*
             var weapon = GetEquippedWeapon();
             
             if (weapon.weaponType == WeaponType.Ranged && weapon.currentAmmo < action.ammoCost)
@@ -79,13 +82,33 @@ public class CombatModule : ModuleBase
                 Debug.Log("Out of ammo, cannot queue action!");
                 return;
             }
+            */
             
             _queuedActions.Enqueue(action);
             SpendAP(action.apCost);
-            weapon.ConsumeAmmo(action.ammoCost);
+            //weapon.ConsumeAmmo(action.ammoCost);
             Debug.Log($"Queuelandı, Combat action: {action.actionName} AP: {_currentAP}");
         }
     }
+    
+    public void DequeueLastAction()
+    {
+        if (_queuedActions.Count == 0)
+            return;
+
+        // FIFO için önce kuyruktan listeye dönüştür.
+        var actions = new List<CombatAction>(_queuedActions);
+        var lastAction = actions[^1];
+        
+        RefundAP(lastAction.apCost);
+        GetEquippedWeapon()?.RefundAmmo(lastAction.ammoCost);
+
+        actions.RemoveAt(actions.Count - 1);
+        _queuedActions = new Queue<CombatAction>(actions);
+
+        Debug.Log($"Dequeue yapıldı, geri alındı: {lastAction.actionName}");
+    }
+
     
     public void ClearQueuedActions()
     {
@@ -107,9 +130,15 @@ public class CombatModule : ModuleBase
         _currentAP = _maxAP;
         Debug.Log($"AP refillendi, current AP: {_currentAP}");
     }
+
+    public void RefundAP(float amount)
+    {
+        _currentAP += amount;
+    }
     
     public List<CombatAction> GetAvailableActions()
     {
+        /*
         Weapon weapon = GetEquippedWeapon();
         List<CombatAction> actions = new List<CombatAction>();
 
@@ -117,9 +146,9 @@ public class CombatModule : ModuleBase
         {
             if (IsActionUnlocked(action))
                 actions.Add(action);
-        }
+        }*/
 
-        return actions;
+        return _availableActions;
     }
     
     public void AddAvailableAction(CombatAction action)

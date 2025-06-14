@@ -87,6 +87,10 @@ public class PipBoyPanelController : MonoBehaviour
     [SerializeField] private ItemListElement itemListElementPrefab;
     [SerializeField] private TMP_Text playerWeightText;
     [SerializeField] private Button discardButton;
+
+    [SerializeField] private Button equipButton;
+    [SerializeField] private Button unequipButton;
+    
     private Transform _playerItemListContainer;
     private InventoryModule _inventoryModule;
     private IReadOnlyList<Item> _playerItems;
@@ -98,10 +102,13 @@ public class PipBoyPanelController : MonoBehaviour
     [Header("PipBoy Panel GOs")] 
     [SerializeField] private GameObject statsPanel;
     [SerializeField] private GameObject inventoryPanel;
+    [SerializeField] private GameObject dataPanel;
 
     [SerializeField] private GameObject statusPanel;
     [SerializeField] private GameObject specialPanel;
     [SerializeField] private GameObject skillsPanel;
+
+    [SerializeField] private TMP_Text playerNameText;
     
     /* Player controller */
     private AgentController _playerController;
@@ -121,6 +128,7 @@ public class PipBoyPanelController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerNameText.text = GameManager.Instance.playerName;
         _playerController = GameManager.Instance.PlayerController;
         _inventoryModule = _playerController.GetModule<InventoryModule>();
         _playerItems = _inventoryModule.Items;
@@ -153,8 +161,10 @@ public class PipBoyPanelController : MonoBehaviour
 
     private void ClearPipBoyTabSelections()
     {
+        playerNameText.gameObject.SetActive(false);
         statsPanel.SetActive(false);
         inventoryPanel.SetActive(false);
+        dataPanel.SetActive(false);
         
         statsTabButtonText.color = _pipBoyTabTextDefaultColor;
         inventoryTabButtonText.color = _pipBoyTabTextDefaultColor;
@@ -171,6 +181,7 @@ public class PipBoyPanelController : MonoBehaviour
     /* Stats Panel Initialize - Update */
     private void InitializeStatsPanel()
     {
+        playerNameText.gameObject.SetActive(false);
         statsPanel.SetActive(true);
         InitializeStatusPanel();
         InitializeSpecialPanel();
@@ -183,7 +194,10 @@ public class PipBoyPanelController : MonoBehaviour
     
     private void InitializeInventoryPanel()
     {
+        playerNameText.gameObject.SetActive(false);
         inventoryPanel.SetActive(true);
+        equipButton.gameObject.SetActive(false);
+        unequipButton.gameObject.SetActive(false);
         RefreshInventoryList();  
         ClearInventorySelections();
         OnAllClicked();
@@ -206,7 +220,8 @@ public class PipBoyPanelController : MonoBehaviour
         apText.text = "AP " + _playerController.GetModule<CombatModule>().CurrentAP + "/" +
                       _playerController.GetModule<CombatModule>().MaxAP;
         xpText.text = "XP " + _playerController.GetModule<LevelModule>().CurrentXP + "/"; /* TODO BİR SONRAKİ LEVELİN XP'Sİ EKLENECEK */
-        /* TODO AVATAR RESMİNİ DE EKLE */
+        playerNameText.gameObject.SetActive(true);
+
     }
 
     private void InitializeSpecialPanel()
@@ -218,12 +233,14 @@ public class PipBoyPanelController : MonoBehaviour
         intelligenceValText.text = _playerController.GetModule<StatsModule>().Intelligence.ToString();
         agilityValText.text = _playerController.GetModule<StatsModule>().Agility.ToString();
         luckValText.text = _playerController.GetModule<StatsModule>().Luck.ToString();
+        playerNameText.gameObject.SetActive(false);
         ClearSpecialSelections();
     }
     
     private void InitializeSkillsPanel()
     {
         RefreshSkillSelections();
+        playerNameText.gameObject.SetActive(false);
     }
 
     private void ClearStatsTabSelections()
@@ -293,7 +310,26 @@ public class PipBoyPanelController : MonoBehaviour
         {
             Debug.Log("Creating item for player");
             if (IsItemInCategory(item, _categories[_categoryIndex]))
-                CreateItemButton(item, _playerItemListContainer, true);
+            {
+                if (item.config is ArmorConfig armorConfig)
+                {
+                    if (_inventoryModule.equippedItems.TryGetValue(armorConfig.slot, out var equippedItem) &&
+                        equippedItem == item)
+                    {
+                        CreateItemButton(item, _playerItemListContainer, true,true);
+                    }
+                    else
+                    {
+                        CreateItemButton(item, _playerItemListContainer, true,false);
+                    }
+                    
+                }
+                else
+                {
+                    CreateItemButton(item, _playerItemListContainer, true,false);
+                }
+                
+            }
         }
         RefreshItemListElementSelections();
         UpdateDetailPanel();
@@ -306,7 +342,7 @@ public class PipBoyPanelController : MonoBehaviour
         return item.config.itemType.ToString() == category;
     }
     
-    private void CreateItemButton(Item item, Transform parent, bool isPlayerInventory)
+    private void CreateItemButton(Item item, Transform parent, bool isPlayerInventory, bool isEquipped)
     {
         Debug.Log($"Parent: {parent.gameObject.scene.name}");
         var element = Instantiate(itemListElementPrefab, parent,false);
@@ -314,7 +350,7 @@ public class PipBoyPanelController : MonoBehaviour
         {
             Debug.Log("ELEMENT IS NULLLLL");
         }
-        element.Initialize(item,isPlayerInventory);
+        element.Initialize(item,isPlayerInventory, isEquipped);
     }
 
     private void OnItemSelected(Item item, ItemListElement itemListElement)
@@ -323,7 +359,38 @@ public class PipBoyPanelController : MonoBehaviour
         RefreshItemListElementSelections();
         itemListElement.SetSelected(true);
         discardButton.gameObject.SetActive(true);
+        if (item.config is ArmorConfig armorConfig)
+        {
+            if (_inventoryModule.equippedItems.ContainsKey(armorConfig.slot))
+            {
+                equipButton.interactable = false;
+                unequipButton.interactable = true;
+            }
+            else
+            {
+                equipButton.interactable = true;
+                unequipButton.interactable = false;
+            }
+        }
         UpdateDetailPanel();
+    }
+
+    public void OnEquipClicked()
+    {
+        if (_inventoryModule.TryEquipItem(_selectedItem))
+        {
+            equipButton.interactable = false;
+            unequipButton.interactable = true;
+            RefreshInventoryList();
+        }
+    }
+
+    public void OnUnequipClicked()
+    {
+        _inventoryModule.UnequipItem(_selectedItem);
+        equipButton.interactable = true;
+        unequipButton.interactable = false;
+        RefreshInventoryList();
     }
 
     private void RefreshItemListElementSelections()
@@ -401,6 +468,8 @@ public class PipBoyPanelController : MonoBehaviour
     public void OnDataClicked()
     {
         UIManager.Instance.lastSelectedPipBoyPanel = PipBoyPanels.Data;
+        ClearPipBoyTabSelections();
+        dataPanel.SetActive(true);
     }
     
     public void OnStatusClicked()
@@ -408,6 +477,7 @@ public class PipBoyPanelController : MonoBehaviour
         DeactivateStatsPanels();
         ClearStatsTabSelections();
         statusPanel.SetActive(true);
+        playerNameText.gameObject.SetActive(true);
         statusTabButtonText.color = Color.black;
         statusTabImage.color = _statTextDefaultColor;
     }
@@ -524,6 +594,7 @@ public class PipBoyPanelController : MonoBehaviour
 
     public void OnAllClicked()
     {
+        _selectedItem = null;
         ClearInventorySelections();
         _categoryIndex = 0;
         allTabButtonText.color = Color.black;
@@ -533,46 +604,63 @@ public class PipBoyPanelController : MonoBehaviour
     
     public void OnWeaponClicked()
     {
+        _selectedItem = null;
         ClearInventorySelections();
         _categoryIndex = 1;
         weaponTabButtonText.color = Color.black;
         weaponTabImage.color = _pipBoyTabTextDefaultColor;
+        equipButton.gameObject.SetActive(false);
+        unequipButton.gameObject.SetActive(false);
         RefreshInventoryList();
     }
     
     public void OnArmorClicked()
     {
+        _selectedItem = null;
         ClearInventorySelections();
         _categoryIndex = 2;
         armorTabButtonText.color = Color.black;
         armorTabImage.color = _pipBoyTabTextDefaultColor;
+        equipButton.gameObject.SetActive(true);
+        unequipButton.gameObject.SetActive(true);
+        equipButton.interactable = false;
+        unequipButton.interactable = false;
         RefreshInventoryList();
     }
     
     public void OnConsumableClicked()
     {
+        _selectedItem = null;
         ClearInventorySelections();
         _categoryIndex = 3;
         consumableTabButtonText.color = Color.black;
         consumableTabImage.color = _pipBoyTabTextDefaultColor;
+        equipButton.gameObject.SetActive(false);
+        unequipButton.gameObject.SetActive(false);
         RefreshInventoryList();
     }
     
     public void OnQuestClicked()
     {
+        _selectedItem = null;
         ClearInventorySelections();
         _categoryIndex = 4;
         questTabButtonText.color = Color.black;
         questTabImage.color = _pipBoyTabTextDefaultColor;
+        equipButton.gameObject.SetActive(false);
+        unequipButton.gameObject.SetActive(false);
         RefreshInventoryList();
     }
     
     public void OnMiscClicked()
     {
+        _selectedItem = null;
         ClearInventorySelections();
         _categoryIndex = 5;
         miscTabButtonText.color = Color.black;
         miscTabImage.color = _pipBoyTabTextDefaultColor;
+        equipButton.gameObject.SetActive(false);
+        unequipButton.gameObject.SetActive(false);
         RefreshInventoryList();
     }
     

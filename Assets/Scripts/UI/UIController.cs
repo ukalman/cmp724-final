@@ -82,13 +82,15 @@ public class UIController : MonoBehaviour
                 break;
             case UIPanelTypes.CharacterCreation:
                 break;
+            case UIPanelTypes.StoryReveal:
+                break;
             case UIPanelTypes.PipBoy:
                 break;
             case UIPanelTypes.Loot:
                 instance.GetComponent<LootPanelController>().Initialize(GameManager.Instance.PlayerController, GameManager.Instance.CurrentInteractable);
                 /* TODO BU INITIALIZE'I DİREKT STARTTA BİLE VEREBİLİRİZ BELKİ? */
                 break;
-            case UIPanelTypes.Dialogue:
+            case UIPanelTypes.Dialog:
                 break;
             case UIPanelTypes.Battle:
                 break;

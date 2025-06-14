@@ -67,6 +67,8 @@ sysinfo.txt
 *.unitypackage
 *.unitypackage.meta
 *.app
+*.fbx
+*.zip
 
 # Crashlytics generated file
 crashlytics-build.properties

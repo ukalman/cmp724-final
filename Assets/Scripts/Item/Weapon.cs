@@ -53,6 +53,11 @@ public class Weapon : Item
         int max = GetWeaponConfig().maxAmmo;
         currentAmmo = Mathf.Min(currentAmmo + ammoAmount, max);
     }
+
+    public void RefundAmmo(int amount)
+    {
+        currentAmmo += amount;
+    }
     
     public override string GetStatText()
     {

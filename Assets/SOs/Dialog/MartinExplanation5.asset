@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a3316926f440f44eaf8cf8023c32ccd, type: 3}
+  m_Name: MartinExplanation5
+  m_EditorClassIdentifier: 
+  text: Yeah... Look, I was gonna go. But I saw one of the ghouls drag off a dog
+    by its leg and I... decided I'm not that brave.
+  choices:
+  - choiceText: So?
+    nextNode: {fileID: 11400000, guid: 6a87230379d0f7641aa5a75a8eb50325, type: 2}
+    onChosen:
+      m_PersistentCalls:
+        m_Calls: []

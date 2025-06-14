@@ -207,6 +207,7 @@ public class CharacterCreationManager : MonoBehaviour
         }
 
         GameManager.Instance.playerName = name;
+        SceneManager.LoadScene("WastelandScene");
     }
     
     public void OnBackToStats()

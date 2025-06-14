@@ -8,7 +8,7 @@ public class ModuleController : MonoBehaviour
     [SerializeField]
     private Dictionary<Type, IModuleBase> _modules = new Dictionary<Type, IModuleBase>();
     
-    void Update()
+    protected void Update()
     {
         foreach (var module in _modules.Values)
         {

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CameraScroller : MonoBehaviour
@@ -11,6 +12,13 @@ public class CameraScroller : MonoBehaviour
     public Vector2 maxBounds = new Vector2(10f, 10f);
 
     private bool _cameraReset = false;
+
+    private Vector3 initialPosition;
+
+    private void Start()
+    {
+        initialPosition = transform.position;
+    }
 
     private void Update()
     {
@@ -30,11 +38,16 @@ public class CameraScroller : MonoBehaviour
             {
                 _cameraReset = false;
             }
-            else return;
+            else
+            {
+                Debug.Log("Camera is reset and mouse is on edge!");
+                return;
+            }
         }
 
         Vector2 input = GetEdgeScrollDirection();
         Vector3 movement = CalculateIsometricMovement(input);
+        Debug.Log("Move cameraya gönderilien movement: " + movement);
         MoveCamera(movement);
     }
 
@@ -74,20 +87,23 @@ public class CameraScroller : MonoBehaviour
         
         if (tentativePos.x < minBounds.x || tentativePos.x > maxBounds.x)
         {
+            Debug.Log("EVET x'İ 0'lıyorum");
             movement.x = 0f;
         }
         
         if (tentativePos.z < minBounds.y || tentativePos.z > maxBounds.y)
         {
+            Debug.Log("Evet z'yi sıfırlıyorum");
             movement.z = 0f;
         }
 
+        Debug.Log("movement: " + movement);
         transform.position += movement;
     }
 
     private void ResetCamera()
     {
-        transform.position = Vector3.zero;
+        transform.position = initialPosition;
         _cameraReset = true;
     }
 

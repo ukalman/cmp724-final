@@ -97,14 +97,34 @@ public class LootPanelController : MonoBehaviour
         foreach (var item in _playerItems)
         {
             Debug.Log("Creating item for player");
+            
             if (IsItemInCategory(item, _categories[_categoryIndex]))
-                CreateItemButton(item, _playerItemListContainer, true);
+            {
+                if (item.config is ArmorConfig armorConfig)
+                {
+                    if (_inventoryModule.equippedItems.TryGetValue(armorConfig.slot, out var equippedItem) &&
+                        equippedItem == item)
+                    {
+                        CreateItemButton(item, _playerItemListContainer, true,true);
+                    }
+                    else
+                    {
+                        CreateItemButton(item, _playerItemListContainer, true,false);
+                    }
+                    
+                }
+                else
+                {
+                    CreateItemButton(item, _playerItemListContainer, true,false);
+                }
+                
+            }
         }
 
         foreach (var item in _chestItems)
         {
             Debug.Log("Creating item for chest");
-            CreateItemButton(item, _chestItemListContainer, false);
+            CreateItemButton(item, _chestItemListContainer, false, false);
         }
 
         UpdateWeightInfo();
@@ -129,11 +149,11 @@ public class LootPanelController : MonoBehaviour
             Destroy(child.gameObject);
     }
 
-    private void CreateItemButton(Item item, Transform parent, bool isPlayerInventory)
+    private void CreateItemButton(Item item, Transform parent, bool isPlayerInventory, bool isEquipped)
     {
         Debug.Log($"Parent: {parent.gameObject.scene.name}");
         var element = Instantiate(itemListElementPrefab, parent,false);
-        element.Initialize(item,isPlayerInventory);
+        element.Initialize(item,isPlayerInventory, isEquipped);
     }
 
     private void OnItemSelected(Item item, ItemListElement itemListElement)

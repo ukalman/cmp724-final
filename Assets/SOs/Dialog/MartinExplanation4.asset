@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a3316926f440f44eaf8cf8023c32ccd, type: 3}
+  m_Name: MartinExplanation4
+  m_EditorClassIdentifier: 
+  text: "I\u2019ve got a college test coming up\u2026 remote education. Pre-War platform
+    still works, surprisingly. If I fail, I lose the scholarship. And if I go in
+    there, I lose my head."
+  choices:
+  - choiceText: "You\u2019re planning to walk into a ghoul nest for some notes?"
+    nextNode: {fileID: 11400000, guid: 5a83f60a01358e74f8890315ad593702, type: 2}
+  - choiceText: So, you need someone stupid enough to do it for you.
+    nextNode: {fileID: 11400000, guid: 5a83f60a01358e74f8890315ad593702, type: 2}
+  - choiceText: "Where\u2019s the house?"
+    nextNode: {fileID: 11400000, guid: 5a83f60a01358e74f8890315ad593702, type: 2}

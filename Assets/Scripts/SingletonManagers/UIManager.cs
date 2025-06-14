@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public enum UIPanelTypes
@@ -8,37 +9,38 @@ public enum UIPanelTypes
     MainMenu, // Start
     Settings,
     CharacterCreation,
+    StoryReveal,
     PipBoy,
     Loot,
-    Dialogue,
+    Dialog,
     Battle,
     Pause,
     Death,
-    Notification,       // Basit uyarılar (top-right corner gibi)
-    Tooltip,            // Hover açıklamaları
-    QuestPopup,         // Yeni görev geldiğinde çıkan küçük pencere
-    ConfirmationPopup,  // Evet/Hayır gibi UI’lar
-    LoadingScreen       // Sahne geçişleri için
+    Notification,       
+    Tooltip,            
+    QuestPopup,        
+    ConfirmationPopup,  
+    LoadingScreen       
 }
 
 public enum UILayerTypes
 {
-    Background,    // Ana menü arka planı gibi şeyler
-    Persistent,    // Oyun boyunca açık kalan HUD (Healthbar, Compass, Objective Tracker vs.)
-    Midground,     // PipBoy, Dialogue gibi büyük paneller
-    Overlay,       // Pause, Death gibi tüm ekranı kaplayan UI’lar
-    Popup,         // Confirmation, Tooltip, Notification gibi küçük pencereler
-    System         // Loading ekranı gibi UI akışını durduranlar
+    Background,    
+    Persistent,    
+    Midground,    
+    Overlay,      
+    Popup,      
+    System    
 }
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
 
+    public GameObject InteractionTextObject;
+
     private Dictionary<UIPanelTypes, UILayerTypes> _panelLayerMapping;
-
-    [SerializeField] private LootPanelController _lootPanel;
-
+    
     /* Actions - Events */
     public Action<Item, ItemListElement> onItemElementSelected;
     public Action<SkillType, SkillsListElement> onSkillElementSelected; // skill selection in pip-boy
@@ -62,6 +64,8 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
+        InteractionTextObject = GameObject.FindGameObjectWithTag("InteractionText");
+        InteractionTextObject.SetActive(false);
         lastSelectedPipBoyPanel = PipBoyPanels.Stats;
         GameManager.Instance.OnUIPanelTriggered += TriggerPanel;
     }
@@ -82,9 +86,10 @@ public class UIManager : MonoBehaviour
             { UIPanelTypes.MainMenu, UILayerTypes.Overlay },
             { UIPanelTypes.Settings, UILayerTypes.Popup },
             { UIPanelTypes.CharacterCreation, UILayerTypes.Overlay },
+            { UIPanelTypes.StoryReveal, UILayerTypes.Overlay },
             { UIPanelTypes.PipBoy, UILayerTypes.Midground },
             { UIPanelTypes.Loot, UILayerTypes.Overlay },
-            { UIPanelTypes.Dialogue, UILayerTypes.Midground },
+            { UIPanelTypes.Dialog, UILayerTypes.Midground },
             { UIPanelTypes.Battle, UILayerTypes.Persistent },
             { UIPanelTypes.Pause, UILayerTypes.Overlay },
             { UIPanelTypes.Death, UILayerTypes.System },
@@ -103,6 +108,7 @@ public class UIManager : MonoBehaviour
 
     public void TriggerPanel(UIPanelTypes type, bool isOpened)
     {
+        Debug.Log("PANEL TRIGGERED!");
         if (isOpened)
         {
             if (_panelLayerMapping.TryGetValue(type, out var layer))

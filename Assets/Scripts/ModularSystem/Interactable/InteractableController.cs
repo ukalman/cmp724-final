@@ -31,28 +31,32 @@ public class InteractableController : ModuleController, IInteractable
     
     protected virtual void Start()
     {
+        isInteractable = true;
         ActivateModules();
     }
     
     protected virtual void Update()
     {
+        base.Update();
         if (_isPlayerInZone && isInteractable && Input.GetKeyDown(KeyCode.E))
         {
+            UIManager.Instance.InteractionTextObject.SetActive(false);
             Debug.Log("Interacting...");
             Interact(GameManager.Instance.PlayerController);
         }
     }
 
     
-    public virtual bool CanInteract(AgentController agent)
+    public virtual bool CanInteract()
     {
-        return isInteractable;
+        return isInteractable && !GameManager.Instance.isPipBoyActive;
     }
 
     public virtual void OnInteractionZoneEntered(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            UIManager.Instance.InteractionTextObject.SetActive(true);
             _isPlayerInZone = true;
             Debug.Log("Player interaction zone entered.");
         }
@@ -62,6 +66,7 @@ public class InteractableController : ModuleController, IInteractable
     {
         if (other.CompareTag("Player"))
         {
+            UIManager.Instance.InteractionTextObject.SetActive(false);
             _isPlayerInZone = false;
             Debug.Log("Player interaction zone exited.");
         }
@@ -77,6 +82,8 @@ public class InteractableController : ModuleController, IInteractable
                 GameManager.Instance.OnUIPanelTriggered?.Invoke(UIPanelTypes.Loot, true);
                 break;
             case InteractionTypes.Dialogue:
+                GameManager.Instance.OnUIPanelTriggered?.Invoke(UIPanelTypes.Dialog, true);
+                isInteractable = false;
                 break;
             case InteractionTypes.Terminal:
                 break;
